@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Cotizador — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'cotizador' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header"><h1>Cotizador</h1></header>
+    <div class="admin-content">
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:32px;">
+        <div>
+          <div class="admin-card" style="margin-bottom:24px;">
+            <div class="admin-card__header"><h3>1. Seleccionar cliente</h3></div>
+            <div class="admin-card__body" style="padding:24px;">
+              <select id="clientSelect" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;">
+                <option value="">Seleccionar cliente...</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}">{{ c.company_name }} — {{ c.contact_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="admin-card" style="margin-bottom:24px;">
+            <div class="admin-card__header"><h3>2. Seleccionar capacidades</h3></div>
+            <div class="admin-card__body" style="padding:24px;">
+              {% for c in capabilities %}
+              <label style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;">
+                <input type="checkbox" class="cap-check" data-id="{{ c.id }}" data-name="{{ c.name }}" data-price="{{ c.base_price }}">
+                <span style="flex:1;">{{ c.name }}</span>
+                <span style="color:var(--text-muted);font-size:0.85rem;">${{ '{:,.2f}'.format(c.base_price) }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="admin-card" style="margin-bottom:24px;">
+            <div class="admin-card__header"><h3>3. Seleccionar automatizaciones</h3></div>
+            <div class="admin-card__body" style="padding:24px;">
+              {% for a in automations %}
+              <label style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;">
+                <input type="checkbox" class="auto-check" data-id="{{ a.id }}" data-name="{{ a.name }}" data-price="{{ a.base_price }}">
+                <span style="flex:1;">{{ a.name }}</span>
+                <span style="color:var(--text-muted);font-size:0.85rem;">${{ '{:,.2f}'.format(a.base_price) }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="admin-card">
+            <div class="admin-card__header"><h3>4. Servicios adicionales</h3></div>
+            <div class="admin-card__body" style="padding:24px;">
+              {% for s in services %}
+              <label style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;">
+                <input type="checkbox" class="svc-check" data-id="{{ s.id }}" data-name="{{ s.name }}" data-price="{{ s.base_price }}">
+                <span style="flex:1;">{{ s.name }}</span>
+                <span style="color:var(--text-muted);font-size:0.85rem;">${{ '{:,.2f}'.format(s.base_price) }}{% if s.is_recurring %} / {{ s.billing_interval }}{% endif %}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="admin-card" style="position:sticky;top:24px;">
+            <div class="admin-card__header"><h3>Resumen</h3></div>
+            <div class="admin-card__body" style="padding:24px;">
+              <div id="summaryItems" style="margin-bottom:16px;">
+                <p style="color:var(--text-muted);font-size:0.9rem;text-align:center;">Selecciona elementos para cotizar</p>
+              </div>
+              <div style="border-top:1px solid var(--border);padding-top:16px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                  <span>Subtotal</span>
+                  <strong id="subtotal">$0.00</strong>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                  <span>Descuento</span>
+                  <input type="number" id="discountPct" value="0" min="0" max="100" style="width:60px;padding:6px;border:1px solid var(--border);border-radius:4px;text-align:center;">%
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:1.2rem;">
+                  <strong>Total</strong>
+                  <strong id="totalPrice" style="color:var(--accent-blue);">$0.00</strong>
+                </div>
+              </div>
+              <div style="margin-top:16px;">
+                <input type="text" id="quoteTitle" placeholder="Título de la cotización" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.9rem;margin-bottom:8px;">
+                <textarea id="quoteScope" placeholder="Alcance del proyecto (opcional)" rows="3" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.9rem;margin-bottom:8px;resize:vertical;"></textarea>
+                <button id="saveQuote" class="btn btn--primary" style="width:100%;padding:12px;font-size:1rem;"><i class="ti ti-file-text"></i> Generar Cotización</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  function recalc() {
+    let total = 0;
+    let html = '';
+    document.querySelectorAll('.cap-check:checked, .auto-check:checked, .svc-check:checked').forEach(cb => {
+      const price = parseFloat(cb.dataset.price);
+      total += price;
+      html += `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.85rem;"><span>${cb.dataset.name}</span><span>$${price.toFixed(2)}</span></div>`;
+    });
+    const discount = parseFloat(document.getElementById('discountPct').value) || 0;
+    const discountAmt = total * (discount / 100);
+    const final = total - discountAmt;
+    document.getElementById('summaryItems').innerHTML = html || '<p style="color:var(--text-muted);font-size:0.9rem;text-align:center;">Selecciona elementos</p>';
+    document.getElementById('subtotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('totalPrice').textContent = '$' + final.toFixed(2);
+  }
+
+  document.querySelectorAll('.cap-check, .auto-check, .svc-check').forEach(cb => cb.addEventListener('change', recalc));
+  document.getElementById('discountPct').addEventListener('input', recalc);
+
+  document.getElementById('saveQuote').addEventListener('click', async () => {
+    const clientId = document.getElementById('clientSelect').value;
+    if (!clientId) { alert('Selecciona un cliente'); return; }
+    const items = [];
+    document.querySelectorAll('.cap-check:checked').forEach(cb => {
+      items.push({ item_type: 'capability', item_id: cb.dataset.id, description: cb.dataset.name, quantity: 1, unit_price: cb.dataset.price });
+    });
+    document.querySelectorAll('.auto-check:checked').forEach(cb => {
+      items.push({ item_type: 'automation', item_id: cb.dataset.id, description: cb.dataset.name, quantity: 1, unit_price: cb.dataset.price });
+    });
+    document.querySelectorAll('.svc-check:checked').forEach(cb => {
+      items.push({ item_type: 'service', item_id: cb.dataset.id, description: cb.dataset.name, quantity: 1, unit_price: cb.dataset.price });
+    });
+    if (!items.length) { alert('Selecciona al menos un item'); return; }
+
+    const body = {
+      client_id: clientId,
+      title: document.getElementById('quoteTitle').value || 'Cotización',
+      scope: document.getElementById('quoteScope').value,
+      discount_pct: parseFloat(document.getElementById('discountPct').value) || 0,
+      items: items,
+    };
+
+    const btn = document.getElementById('saveQuote');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader-2 ti-spin"></i> Guardando...';
+
+    const resp = await fetch('/cotizador/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      window.location.href = '/admin/quotations/' + data.quotation_id;
+    } else {
+      alert('Error: ' + (data.error || 'No se pudo guardar'));
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-file-text"></i> Generar Cotización';
+    }
+  });
+});
+</script>
+{% endblock %}

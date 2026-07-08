@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Progreso — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar__brand">
+      <img src="/static/img/Stonelytics_logo.jpeg" style="width:32px;height:32px;object-fit:contain;border-radius:8px;">
+      <span>Mi Empresa</span>
+    </div>
+    <nav class="admin-sidebar__nav">
+      <a href="/portal/dashboard"><i class="ti ti-dashboard"></i> Diagnostico</a>
+      <a href="/portal/progreso" class="active"><i class="ti ti-trending-up"></i> Progreso</a>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <a href="/portal/logout"><i class="ti ti-logout"></i> Cerrar sesion</a>
+    </div>
+  </aside>
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Progreso del Proyecto</h1>
+    </header>
+    <div class="admin-content">
+      <div style="display:flex;gap:16px;margin-bottom:24px;">
+        <div class="admin-stat" style="flex:1;">
+          <div class="admin-stat__icon" style="background:rgba(37,99,235,0.1);color:var(--accent-blue);"><i class="ti ti-message-chatbot"></i></div>
+          <div><span class="admin-stat__value">{% if consultoria.estado != 'borrador' %}100%{% else %}0%{% endif %}</span><span class="admin-stat__label">Diagnostico</span></div>
+        </div>
+        <div class="admin-stat" style="flex:1;">
+          <div class="admin-stat__icon" style="background:rgba(217,119,6,0.1);color:var(--accent-amber);"><i class="ti ti-code"></i></div>
+          <div><span class="admin-stat__value">0%</span><span class="admin-stat__label">Construccion</span></div>
+        </div>
+        <div class="admin-stat" style="flex:1;">
+          <div class="admin-stat__icon" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ti ti-rocket"></i></div>
+          <div><span class="admin-stat__value">0%</span><span class="admin-stat__label">Implementacion</span></div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card__header"><h3>Linea de Tiempo</h3></div>
+        <div class="admin-card__body">
+          <div style="padding:20px;text-align:center;color:var(--text-muted);">
+            <p>El proyecto se encuentra en la fase de <strong>{{ consultoria.estado }}</strong>.</p>
+            <p style="margin-top:8px;">El equipo de Stonelytics esta trabajando en el plan de implementacion.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

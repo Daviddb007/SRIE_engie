@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cotización {{ quotation.quotation_number }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 20mm 25mm 20mm;
+      @bottom-center {
+        content: "Stonelytics — " counter(page) " de " counter(pages);
+        font-size: 8pt;
+        color: #999;
+      }
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #0d9488;
+    }
+    .header-left h1 {
+      font-size: 20pt;
+      color: #0d9488;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .header-left p {
+      font-size: 9pt;
+      color: #64748b;
+    }
+    .header-right {
+      text-align: right;
+      font-size: 9pt;
+      color: #64748b;
+    }
+    .header-right strong {
+      color: #1e293b;
+    }
+    .meta-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      gap: 20px;
+    }
+    .meta-box {
+      flex: 1;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .meta-box h3 {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .meta-box p {
+      font-size: 10pt;
+      color: #1e293b;
+    }
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #0d9488;
+      margin: 24px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .scope {
+      font-size: 9.5pt;
+      color: #334155;
+      margin-bottom: 20px;
+      white-space: pre-line;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    thead th {
+      background: #0d9488;
+      color: white;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    thead th:last-child {
+      text-align: right;
+    }
+    tbody td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 9.5pt;
+    }
+    tbody td:last-child {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .totals {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 30px;
+    }
+    .totals-box {
+      width: 280px;
+    }
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 9.5pt;
+    }
+    .totals-row.discount {
+      color: #dc2626;
+    }
+    .totals-row.total {
+      border-top: 2px solid #0d9488;
+      padding-top: 10px;
+      margin-top: 6px;
+      font-size: 13pt;
+      font-weight: 700;
+      color: #0d9488;
+    }
+    .conditions {
+      font-size: 9pt;
+      color: #64748b;
+      margin-top: 24px;
+      padding: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      white-space: pre-line;
+    }
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 8.5pt;
+      color: #94a3b8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <h1>COTIZACIÓN</h1>
+      <p>{{ quotation.quotation_number }}</p>
+    </div>
+    <div class="header-right">
+      <p><strong>Stonelytics</strong></p>
+      <p>Sistemas Digitales</p>
+      <p>daviddb@stonelytics.tech</p>
+      <p>stonelytics.tech</p>
+    </div>
+  </div>
+
+  <div class="meta-grid">
+    <div class="meta-box">
+      <h3>Cliente</h3>
+      <p><strong>{{ quotation.client.company_name }}</strong></p>
+      <p>{{ quotation.client.contact_name }}</p>
+      <p>{{ quotation.client.contact_email }}</p>
+    </div>
+    <div class="meta-box">
+      <h3>Propuesta</h3>
+      <p><strong>{{ quotation.title }}</strong></p>
+      <p>{{ quotation.quotation_number }}</p>
+    </div>
+    <div class="meta-box">
+      <h3>Vigencia</h3>
+      {% if quotation.valid_until %}
+      <p>{{ quotation.valid_until.strftime('%d/%m/%Y') }}</p>
+      {% else %}
+      <p>—</p>
+      {% endif %}
+      {% if quotation.timeline_weeks %}
+      <p>{{ quotation.timeline_weeks }} semanas</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if quotation.scope %}
+  <h2 class="section-title">Alcance del Proyecto</h2>
+  <div class="scope">{{ quotation.scope }}</div>
+  {% endif %}
+
+  <h2 class="section-title">Desglose</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Tipo</th>
+        <th>Cant.</th>
+        <th>Precio Unitario</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in quotation.items %}
+      <tr>
+        <td>{{ item.description }}</td>
+        <td>{{ item.item_type }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ '{:,.2f}'.format(item.unit_price) }}</td>
+        <td>${{ '{:,.2f}'.format(item.total_price) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <div class="totals-box">
+      <div class="totals-row">
+        <span>Subtotal</span>
+        <span>${{ '{:,.2f}'.format(quotation.total_price) }}</span>
+      </div>
+      {% if quotation.discount_pct and quotation.discount_pct > 0 %}
+      <div class="totals-row discount">
+        <span>Descuento ({{ quotation.discount_pct }}%)</span>
+        <span>-${{ '{:,.2f}'.format(quotation.total_price * quotation.discount_pct / 100) }}</span>
+      </div>
+      {% endif %}
+      <div class="totals-row total">
+        <span>TOTAL</span>
+        <span>${{ '{:,.2f}'.format(quotation.final_price) }}</span>
+      </div>
+    </div>
+  </div>
+
+  {% if quotation.conditions %}
+  <div class="conditions">{{ quotation.conditions }}</div>
+  {% endif %}
+
+  <div class="footer-note">
+    Esta cotización es válida hasta la fecha indicada. Para aceptación o preguntas contacte a daviddb@stonelytics.tech
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Blueprint {{ consultoria.cliente.company_name }}</title>
+  <style>
+    @page { size: A4; margin: 20mm 18mm; @bottom-center { content: "Stonelytics — SRIE Engine — " counter(page) " de " counter(pages); font-size: 8pt; color: #999; } }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 9.5pt; color: #1e293b; line-height: 1.5; }
+    h1 { font-size: 18pt; color: #0d9488; margin-bottom: 4px; }
+    h2 { font-size: 12pt; color: #0d9488; margin: 20px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+    h3 { font-size: 10pt; color: #334155; margin: 12px 0 6px; }
+    .header { display: flex; justify-content: space-between; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #0d9488; }
+    .header-right { text-align: right; font-size: 8pt; color: #64748b; }
+    .meta-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 10px 14px; margin-bottom: 12px; }
+    .meta-box strong { color: #1e293b; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 8.5pt; }
+    th { background: #0d9488; color: white; padding: 6px 8px; text-align: left; font-size: 7.5pt; text-transform: uppercase; }
+    td { padding: 5px 8px; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) { background: #f8fafc; }
+    .madurez-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; display: inline-block; width: 120px; vertical-align: middle; }
+    .madurez-fill { height: 100%; border-radius: 4px; }
+    .badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 7pt; font-weight: 600; }
+    .badge-alto { background: #fef2f2; color: #dc2626; }
+    .badge-medio { background: #fffbeb; color: #d97706; }
+    .badge-bajo { background: #f0fdf4; color: #16a34a; }
+    .badge-ok { background: #f0fdf4; color: #16a34a; }
+    .badge-info { background: #eff6ff; color: #2563eb; }
+    .badge-warning { background: #fffbeb; color: #d97706; }
+    .section { margin-bottom: 16px; }
+    .totals { display: flex; justify-content: space-between; padding: 10px 14px; background: #f8fafc; border-radius: 4px; margin-top: 10px; }
+    .totals strong { font-size: 12pt; color: #0d9488; }
+    .footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 7.5pt; color: #94a3b8; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Blueprint Empresarial</h1>
+      <p style="color:#64748b;font-size:9pt;">Diagnostico generado por SRIE Engine</p>
+    </div>
+    <div class="header-right">
+      <p><strong>Stonelytics</strong></p>
+      <p>SRIE Engine — Ingenieria Empresarial</p>
+      <p>{{ consultoria.created_at.strftime('%d/%m/%Y') if consultoria.created_at else '' }}</p>
+    </div>
+  </div>
+
+  <div class="meta-box">
+    <p><strong>Cliente:</strong> {{ consultoria.cliente.company_name }} | <strong>Contacto:</strong> {{ consultoria.cliente.contact_name }} | <strong>Email:</strong> {{ consultoria.cliente.contact_email }}</p>
+  </div>
+
+  {% set madurez = twin_asis.capas.get('madurez', {}) if twin_asis and twin_asis.capas else {} %}
+  {% set score_gral = madurez.get('general', 0) %}
+  {% set resumen = madurez.get('resumen_ejecutivo', {}) %}
+
+  <div class="section">
+    <h2>1. Resumen Ejecutivo</h2>
+    {% if resumen and resumen is mapping %}
+    <p>{{ resumen.get('perfil_empresa', '') }}</p>
+    {% endif %}
+    <div style="display:flex;gap:20px;margin-top:8px;">
+      <div><strong>Madurez Digital:</strong> {{ score_gral }}%</div>
+      <div><strong>Brechas:</strong> {{ brechas | length }}</div>
+      <div><strong>Modulos:</strong> {{ plan.get('items', []) | length if plan else 0 }}</div>
+    </div>
+  </div>
+
+  {% if madurez %}
+  <div class="section">
+    <h2>2. Madurez por Dimension</h2>
+    <table>
+      <thead><tr><th>Dimension</th><th>Madurez</th><th>Nivel</th></tr></thead>
+      <tbody>
+        {% set caps = {'proposito':'Proposito','clientes':'Clientes','servicios':'Servicios','procesos':'Procesos','personas':'Personas','informacion':'Informacion','tecnologia':'Tecnologia','inteligencia':'Inteligencia','gobierno':'Gobierno','evolucion':'Evolucion'} %}
+        {% for cid, clabel in caps.items() %}
+        {% set sc = madurez.get('por_capa', {}).get(cid, 0) %}
+        <tr><td><strong>{{ clabel }}</strong></td><td><div class="madurez-bar"><div class="madurez-fill" style="width:{{ sc }}%;background:{% if sc < 30 %}#dc2626{% elif sc < 60 %}#d97706{% else %}#16a34a{% endif %};"></div></div></td><td><span class="badge badge-{{ 'alto' if sc < 30 else 'medio' if sc < 60 else 'bajo' }}">{{ sc }}%</span></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if brechas %}
+  <div class="section">
+    <h2>3. Brechas Identificadas</h2>
+    <table>
+      <thead><tr><th>Capa</th><th>Problema</th><th>Impacto</th><th>Solucion</th></tr></thead>
+      <tbody>
+        {% for b in brechas %}
+        <tr><td><strong>{{ b.capa }}</strong></td><td>{{ b.problema_actual[:120] }}</td><td><span class="badge badge-{{ b.impacto }}">{{ b.impacto | upper }}</span></td><td>{{ b.solucion[:80] if b.solucion else '—' }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if twin_tobe and twin_tobe.capas %}
+  <div class="section">
+    <h2>4. Estado Deseado (TO BE) — Propuesto por SRIE</h2>
+    {% set caps = {'proposito':'Proposito','clientes':'Clientes','servicios':'Servicios','procesos':'Procesos','personas':'Personas','informacion':'Informacion','tecnologia':'Tecnologia','inteligencia':'Inteligencia','gobierno':'Gobierno','evolucion':'Evolucion'} %}
+    {% for cid, clabel in caps.items() %}
+    {% set tc = twin_tobe.capas.get(cid, {}) %}
+    {% if tc %}
+    <h3>{{ clabel }}</h3>
+    <table>
+      <thead><tr><th>Atributo</th><th>Valor Propuesto</th></tr></thead>
+      <tbody>
+        {% for k, v in tc.items() %}
+        <tr><td>{{ k | replace('_', ' ') | title }}</td><td>{{ v if v is string else (v | join(', ') if v is iterable and v is not mapping else v) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if plan and plan.get('items') %}
+  <div class="section">
+    <h2>5. Plan Recomendado</h2>
+    <table>
+      <thead><tr><th>Modulo</th><th>Descripcion</th><th>Inversion</th></tr></thead>
+      <tbody>
+        {% for item in plan.get('items', []) %}
+        <tr><td><strong>{{ item.get('modulo', item.get('description', 'Modulo')) }}</strong></td><td>{{ item.get('descripcion', item.get('justificacion', ''))[:100] }}</td><td style="text-align:right;">${{ '{:,.2f}'.format(item.get('precio', 0)) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="totals">
+      <span><strong>Tiempo Estimado:</strong> {{ plan.get('duracion_estimada', 'Por definir') }}</span>
+      <span><strong>Inversion Total:</strong> ${{ '{:,.2f}'.format(plan.get('total_estimado', 0)) }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="footer">
+    <p>Este diagnostico fue generado por SRIE Engine — Stonelytics. Los hallazgos estan clasificados por nivel de confianza: Confirmados (el cliente lo afirmo), Inferidos (deduccion del sistema), Hipotesis (oportunidad potencial).</p>
+    <p>Stonelytics — Ingenieria Empresarial Asistida por IA — stonelytics.tech</p>
+  </div>
+</body>
+</html>

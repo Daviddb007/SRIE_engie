@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Entrevista — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Entrevista: {{ consultoria.cliente.company_name }}</h1>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <span id="capa-indicator" class="badge badge--outline" style="font-size:0.75rem;">Proposito</span>
+        <span id="depth-indicator" class="badge badge--success" style="font-size:0.7rem;background:rgba(37,99,235,0.1);color:var(--accent-blue);">Nivel 1/6</span>
+        <span id="tema-indicator" style="font-size:0.85rem;color:var(--text-muted);">mision y vision</span>
+        <button id="btn-finalizar" class="btn btn--sm btn--primary" onclick="finalizarEntrevista()" style="display:none;">Generar Blueprint Empresarial</button>
+      </div>
+    </header>
+    <div class="admin-content">
+      <div id="chat-container" class="studio-chat">
+        <div id="chat-messages" class="studio-chat__messages">
+          <div class="studio-chat__message studio-chat__message--ia">
+            <div class="studio-chat__avatar"><i class="ti ti-robot"></i></div>
+            <div class="studio-chat__bubble">
+              <p>¡Hola! Soy el asistente de Stonelytics. Voy a ayudarte a construir el diagnóstico empresarial de <strong>{{ consultoria.cliente.company_name }}</strong>.</p>
+              <p>Empecemos por el principio: <strong>¿Cuál es la misión de su empresa? ¿Para qué existe?</strong></p>
+            </div>
+          </div>
+        </div>
+        <div class="studio-chat__progress">
+          <div class="studio-chat__progress-bar" id="progress-bar" style="width:0%"></div>
+        </div>
+        <div class="studio-chat__input">
+          <textarea id="chat-input" placeholder="Escribe tu respuesta aquí..." rows="2" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;resize:none;"></textarea>
+          <button id="btn-enviar" class="btn btn--primary" onclick="enviarMensaje()">Enviar</button>
+        </div>
+        <div id="typing-indicator" class="studio-chat__typing" style="display:none;">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="/static/studio/entrevista.js"></script>
+<script>const CONSULTORIA_ID = '{{ consultoria.id }}';</script>
+{% endblock %}

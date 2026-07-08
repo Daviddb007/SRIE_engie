@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Admin Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'dashboard' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Dashboard</h1>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="color:var(--text-muted);font-size:0.9rem;">Bienvenido, {{ current_user.full_name }}</span>
+        <a href="/cotizador/" class="btn btn--primary btn--sm"><i class="ti ti-calculator"></i> Generar cotización</a>
+      </div>
+    </header>
+    <div class="admin-content">
+      <div class="admin-stats">
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(37,99,235,0.1);color:var(--accent-blue);"><i class="ti ti-building"></i></div>
+          <div>
+            <span class="admin-stat__value">{{ stats.clients }}</span>
+            <span class="admin-stat__label">Clientes</span>
+          </div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ti ti-message-chatbot"></i></div>
+          <div>
+            <span class="admin-stat__value">{{ studio_stats.total }}</span>
+            <span class="admin-stat__label">Consultorias Studio</span>
+          </div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(217,119,6,0.1);color:var(--accent-amber);"><i class="ti ti-file-text"></i></div>
+          <div>
+            <span class="admin-stat__value">{{ stats.quotations }}</span>
+            <span class="admin-stat__label">Cotizaciones</span>
+          </div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ti ti-check"></i></div>
+          <div>
+            <span class="admin-stat__value">{{ studio_stats.completadas }}</span>
+            <span class="admin-stat__label">Blueprints listos</span>
+          </div>
+        </div>
+      </div>
+
+      {% if studio_stats.industrias %}
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header"><h3>Consultorias por Industria</h3></div>
+        <div class="admin-card__body">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            {% for ind, count in studio_stats.industrias.items() %}
+            <span class="badge badge--outline" style="padding:6px 14px;font-size:0.85rem;">{{ ind | title }}: {{ count }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Consultorias recientes</h3>
+            <a href="/studio/" style="font-size:0.85rem;color:var(--accent-blue);">Ver todas →</a>
+          </div>
+          <div class="admin-card__body">
+            {% for c in consultorias[:5] %}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+              <div>
+                <strong style="font-size:0.9rem;">{{ c.cliente.company_name }}</strong>
+                <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">{{ c.industria or 'General' }} · {{ c.created_at.strftime('%d/%m/%Y') if c.created_at else '' }}</p>
+              </div>
+              <span class="badge badge--{{ 'success' if c.estado == 'completada' else 'warning' }}">{{ c.estado }}</span>
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);font-size:0.9rem;text-align:center;padding:24px;">No hay consultorias aun. <a href="/studio/nueva">Crear primera</a></p>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Cotizaciones recientes</h3>
+            <a href="/admin/quotations" style="font-size:0.85rem;color:var(--accent-blue);">Ver todas →</a>
+          </div>
+          <div class="admin-card__body">
+            {% for q in recent_quotations %}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+              <div>
+                <strong style="font-size:0.9rem;">{{ q.quotation_number }}</strong>
+                <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">{{ q.client.company_name }}</p>
+              </div>
+              <span class="badge badge--outline">{{ q.status }}</span>
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);font-size:0.9rem;text-align:center;padding:24px;">No hay cotizaciones aun</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

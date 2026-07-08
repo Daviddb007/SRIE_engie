@@ -1,0 +1,36 @@
+{# Navbar component - shared across landing pages #}
+<nav class="navbar" id="navbar">
+  <div class="container navbar__inner">
+    <a href="/" class="navbar__logo">
+      <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" class="navbar__logo-icon">
+      <div class="navbar__logo-text">
+        <span class="navbar__brand">Stonelytics</span>
+        <span class="navbar__tagline">INTELIGENCIA DIGITAL</span>
+      </div>
+    </a>
+    <div class="navbar__links" id="navLinks">
+      <a href="#hero" class="navbar__link active">Inicio</a>
+      <a href="#sistemas" class="navbar__link">Sistemas</a>
+      <a href="#capacidades" class="navbar__link">Capacidades</a>
+      <a href="#como-trabajamos" class="navbar__link">Proceso</a>
+      <a href="#inversion" class="navbar__link">Inversión</a>
+    </div>
+    <a href="#contacto" class="navbar__cta">Quiero mi Sistema <i class="ti ti-arrow-right"></i></a>
+    <a href="/admin/" class="navbar__admin" title="Panel Admin"><i class="ti ti-layout-dashboard"></i></a>
+    <button class="navbar__burger" id="burger" aria-label="Abrir menú"><i class="ti ti-menu-2"></i></button>
+  </div>
+</nav>
+
+{# Mobile nav - full screen overlay #}
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav__close" id="mobileNavClose" aria-label="Cerrar menú"><i class="ti ti-x"></i></button>
+  <a href="#hero" class="mobile-nav__link">Inicio</a>
+  <a href="#sistemas" class="mobile-nav__link">Sistemas</a>
+  <a href="#capacidades" class="mobile-nav__link">Capacidades</a>
+  <a href="#como-trabajamos" class="mobile-nav__link">Proceso</a>
+  <a href="#inversion" class="mobile-nav__link">Inversión</a>
+  <a href="#contacto" class="mobile-nav__cta">Quiero mi Sistema <i class="ti ti-arrow-right"></i></a>
+  <a href="https://wa.me/{{ whatsapp_number }}?text=Hola!%20Me%20interesa%20un%20Sistema%20Digital." class="mobile-nav__whatsapp" target="_blank" rel="noopener">
+    <i class="ti ti-brand-whatsapp"></i> Contactar por WhatsApp
+  </a>
+</div>

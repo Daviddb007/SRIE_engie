@@ -1,0 +1,36 @@
+:root {
+  --bg-dark: #0A0F1C;
+  --bg-darker: #050810;
+  --bg-light: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --accent-blue: #2563EB;
+  --accent-blue-hover: #1D4ED8;
+  --accent-blue-light: rgba(37, 99, 235, 0.1);
+  --accent-cyan: #06B6D4;
+  --accent-green: #10B981;
+  --accent-green-hover: #059669;
+  --accent-amber: #D97706;
+  --accent-amber-hover: #B45309;
+  --text-primary: #0D1B3E;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --text-light: rgba(255, 255, 255, 0.7);
+  --border: #E2E8F0;
+  --border-light: rgba(255, 255, 255, 0.08);
+  --white: #FFFFFF;
+  --red: #EF4444;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --shadow: 0 4px 24px rgba(13, 27, 62, 0.08);
+  --shadow-lg: 0 12px 40px rgba(13, 27, 62, 0.12);
+  --shadow-card: 0 2px 12px rgba(13, 27, 62, 0.06);
+  --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.15);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-blur: blur(20px);
+}

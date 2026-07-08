@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% block title %}Restaurante Aurora — Cocina de Autor{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/landing.css">{% endblock %}
+
+{% block body %}
+  <nav class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="/demo/start" class="navbar__logo">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#D97706,#92400E);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;">A</div>
+        <div class="navbar__logo-text">
+          <span class="navbar__brand">Aurora</span>
+          <span class="navbar__tagline">COCINA DE AUTOR</span>
+        </div>
+      </a>
+      <div class="navbar__links">
+        <a href="#inicio" class="navbar__link active">Inicio</a>
+        <a href="#menu" class="navbar__link">Menú</a>
+        <a href="#nosotros" class="navbar__link">Nosotros</a>
+        <a href="#galeria" class="navbar__link">Galería</a>
+        <a href="#resenas" class="navbar__link">Reseñas</a>
+        <a href="#faq" class="navbar__link">FAQ</a>
+      </div>
+      <a href="#reservar" class="btn btn--primary navbar__cta" style="background:#D97706;border-color:#D97706;">Reservar <i class="ti ti-arrow-right"></i></a>
+      <button class="navbar__burger" id="burger" aria-label="Abrir menú">
+        <i class="ti ti-menu-2"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio" style="background:linear-gradient(135deg,#1C1917 0%,#292524 100%);min-height:90vh;display:flex;align-items:center;">
+    <div class="hero__bg" style="background:radial-gradient(ellipse 50% 60% at 80% 50%, rgba(217,119,6,0.15) 0%, transparent 70%);"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+        <div>
+          <span style="display:inline-block;background:rgba(217,119,6,0.15);color:#F59E0B;padding:6px 16px;border-radius:100px;font-size:0.75rem;font-weight:700;letter-spacing:1px;margin-bottom:24px;">ABRIMOS ESTE VIERNES</span>
+          <h1 style="color:#FAFAF9;font-size:3.2rem;line-height:1.1;margin-bottom:20px;">Cocina de autor<br>que <span style="color:#F59E0B;">enamora</span></h1>
+          <p style="color:#A8A29E;font-size:1.1rem;margin-bottom:36px;max-width:480px;">Una experiencia gastronómica única en el corazón de Bogotá. Sabores que cuentan historias.</p>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <a href="#reservar" class="btn btn--lg" style="background:#D97706;color:#fff;border-color:#D97706;"><i class="ti ti-calendar-event"></i> Reservar mesa</a>
+            <a href="#menu" class="btn btn--lg" style="border-color:rgba(255,255,255,0.2);color:#FAFAF9;">Ver menú <i class="ti ti-arrow-right"></i></a>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;">
+          <div style="width:380px;height:380px;border-radius:50%;background:linear-gradient(135deg,rgba(217,119,6,0.2),rgba(146,64,14,0.3));display:flex;align-items:center;justify-content:center;border:2px solid rgba(217,119,6,0.3);">
+            <div style="text-align:center;">
+              <div style="font-size:4rem;">🍽️</div>
+              <p style="color:#F59E0B;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;margin-top:8px;">Desde 2019</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTRICAS -->
+  <section style="background:#292524;padding:40px 0;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center;">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:#F59E0B;">4.8</div>
+          <div style="color:#A8A29E;font-size:0.85rem;">Google Rating</div>
+        </div>
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:#F59E0B;">2,400+</div>
+          <div style="color:#A8A29E;font-size:0.85rem;">Clientes satisfechos</div>
+        </div>
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:#F59E0B;">50+</div>
+          <div style="color:#A8A29E;font-size:0.85rem;">Platos en menú</div>
+        </div>
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:#F59E0B;">7</div>
+          <div style="color:#A8A29E;font-size:0.85rem;">Años de experiencia</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="section" id="menu" style="background:#FAFAF9;">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge badge--outline" style="border-color:#D97706;color:#D97706;"><i class="ti ti-star"></i> Nuestro Menú</span>
+        <h2>Platos que <span style="color:#D97706;">dejan huella</span></h2>
+        <p class="section__subtitle">Cada plato es una obra de arte culinaria, preparada con ingredientes frescos y técnicas de vanguardia.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card" style="border-color:#FDE68A;">
+          <div class="service-card__icon" style="background:rgba(217,119,6,0.1);color:#D97706;"><i class="ti ti-flame"></i></div>
+          <h4>Ceviche de Corvina</h4>
+          <p>Corvina fresca marinada en leche de tigre con ají amarillo, cebolla morada y boniato crujiente.</p>
+          <div style="margin-top:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#D97706;">$38.000</div>
+        </div>
+        <div class="service-card" style="border-color:#FDE68A;">
+          <div class="service-card__icon" style="background:rgba(217,119,6,0.1);color:#D97706;"><i class="ti ti-flame"></i></div>
+          <h4>Risotto de Champiñones</h4>
+          <p>Arroz arbóreo cremoso con mezcla de champiñones silvestres, parmesano aged y trufa negra.</p>
+          <div style="margin-top:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#D97706;">$45.000</div>
+        </div>
+        <div class="service-card" style="border-color:#FDE68A;">
+          <div class="service-card__icon" style="background:rgba(217,119,6,0.1);color:#D97706;"><i class="ti ti-flame"></i></div>
+          <h4>Lomo al Trapo</h4>
+          <p>Corte premium envuelto en sal y hierbas, servido con puré de papa causa y salsa chimichurri.</p>
+          <div style="margin-top:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#D97706;">$62.000</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOSOTROS -->
+  <section class="section" id="nosotros" style="background:#fff;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+        <div>
+          <span class="badge badge--outline" style="border-color:#D97706;color:#D97706;"><i class="ti ti-heart"></i> Nuestra Historia</span>
+          <h2 style="margin-top:16px;">Pasión por la <span style="color:#D97706;">gastronomía</span></h2>
+          <p style="color:var(--text-secondary);margin:16px 0;line-height:1.7;">Restaurante Aurora nació en 2019 de la pasión de Chef Andrea Ramírez por fusionar sabores colombianos con técnicas internacionales.</p>
+          <p style="color:var(--text-secondary);margin-bottom:16px;line-height:1.7;">Cada plato cuenta una historia. Cada ingrediente tiene un propósito. Nuestra cocina es un viaje que comienza en los mercados locales y termina en tu mesa.</p>
+          <div style="display:flex;gap:24px;margin-top:24px;">
+            <div style="text-align:center;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#D97706;">7+</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);">Años de experiencia</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#D97706;">3</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);">Restaurantes</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);border-radius:var(--radius-lg);height:400px;display:flex;align-items:center;justify-content:center;">
+          <div style="text-align:center;">
+            <div style="font-size:5rem;">👨‍🍳</div>
+            <p style="color:#92400E;font-family:'Space Grotesk',sans-serif;font-weight:700;margin-top:8px;">Chef Andrea Ramírez</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section class="section section--light" id="galeria" style="background:#F5F5F4;">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge badge--outline" style="border-color:#D97706;color:#D97706;"><i class="ti ti-camera"></i> Galería</span>
+        <h2>Momentos que <span style="color:#D97706;">capturamos</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+        <div style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);border-radius:var(--radius);height:200px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">🥂</div>
+        <div style="background:linear-gradient(135deg,#FEE2E2,#FECACA);border-radius:var(--radius);height:200px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">🥩</div>
+        <div style="background:linear-gradient(135deg,#DBEAFE,#BFDBFE);border-radius:var(--radius);height:200px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">🍷</div>
+        <div style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0);border-radius:var(--radius);height:200px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">🌿</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEÑAS -->
+  <section class="section" id="resenas" style="background:#fff;">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge badge--outline" style="border-color:#D97706;color:#D97706;"><i class="ti ti-star"></i> Reseñas</span>
+        <h2>Lo que dicen <span style="color:#D97706;">nuestros clientes</span></h2>
+      </div>
+      <div class="cases-grid">
+        <div class="case-card" style="border-color:#FDE68A;">
+          <div class="case-card__info">
+            <div style="color:#F59E0B;margin-bottom:8px;">★★★★★</div>
+            <h4>"Una experiencia increíble"</h4>
+            <p>"El ceviche de corvina es el mejor que he probado. El ambiente es perfecto para una cena romántica."</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">— Laura Gómez, Google Reviews</p>
+          </div>
+        </div>
+        <div class="case-card" style="border-color:#FDE68A;">
+          <div class="case-card__info">
+            <div style="color:#F59E0B;margin-bottom:8px;">★★★★★</div>
+            <h4>"Superó mis expectativas"</h4>
+            <p>"Vinimos a celebrar nuestro aniversario y fue perfecto. El servicio es impecable y la comida espectacular."</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">— Carlos Méndez, TripAdvisor</p>
+          </div>
+        </div>
+        <div class="case-card" style="border-color:#FDE68A;">
+          <div class="case-card__info">
+            <div style="color:#F59E0B;margin-bottom:8px;">★★★★★</div>
+            <h4>"Volveré pronto"</h4>
+            <p>"El lomo al trapo es divino. Los cócteles de autor son increíbles. 100% recomendado."</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">— María Rodríguez, Instagram</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" style="background:#F5F5F4;">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge badge--outline" style="border-color:#D97706;color:#D97706;"><i class="ti ti-help"></i> Preguntas Frecuentes</span>
+        <h2>¿Tienes <span style="color:#D97706;">preguntas?</span></h2>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+          <h4 style="margin-bottom:8px;">¿Necesito reservar?</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary);">Recomendamos reservar con al menos 24 horas de anticipación, especialmente fines de semana.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+          <h4 style="margin-bottom:8px;">¿Tienen menú vegetariano?</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary);">Sí, contamos con opciones vegetarianas y veganas en cada categoría del menú.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+          <h4 style="margin-bottom:8px;">¿Aceptan eventos privados?</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary);">Sí, tenemos un salón privado para hasta 40 personas. Contáctanos para más información.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding:20px 0;">
+          <h4 style="margin-bottom:8px;">¿Cuál es el horario?</h4>
+          <p style="font-size:0.9rem;color:var(--text-secondary);">Martes a Domingo de 12:00 PM a 11:00 PM. Lunes cerrado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESERVAR -->
+  <section class="section section--dark" id="reservar" style="background:#1C1917;">
+    <div class="container" style="text-align:center;">
+      <span class="badge badge--green"><i class="ti ti-calendar-event"></i> Reservaciones</span>
+      <h2 style="color:#FAFAF9;margin-bottom:16px;">Reserva tu mesa</h2>
+      <p style="color:#A8A29E;margin-bottom:32px;">Escríbenos por WhatsApp y confirmaremos tu reserva al instante.</p>
+      <a href="https://wa.me/573057708315?text=Hola!%20Quiero%20reservar%20una%20mesa%20en%20Restaurante%20Aurora" class="btn btn--lg" style="background:#25D366;color:#fff;border-color:#25D366;" target="_blank">
+        <i class="ti ti-brand-whatsapp"></i> Reservar por WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="section" style="background:#fff;padding:48px 0;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;">
+        <div>
+          <h3 style="margin-bottom:16px;">Encuéntranos</h3>
+          <p style="color:var(--text-secondary);margin-bottom:8px;"><i class="ti ti-map-pin" style="color:#D97706;"></i> Carrera 7 #72-41, Bogotá</p>
+          <p style="color:var(--text-secondary);margin-bottom:8px;"><i class="ti ti-phone" style="color:#D97706;"></i> +57 305 770 8315</p>
+          <p style="color:var(--text-secondary);margin-bottom:8px;"><i class="ti ti-clock" style="color:#D97706;"></i> Mar-Dom: 12PM - 11PM</p>
+        </div>
+        <div style="background:#F5F5F4;border-radius:var(--radius-lg);height:250px;display:flex;align-items:center;justify-content:center;">
+          <div style="text-align:center;color:var(--text-muted);">
+            <i class="ti ti-map" style="font-size:2rem;"></i>
+            <p style="margin-top:8px;">Mapa de ubicación</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#1C1917;padding:40px 0 24px;">
+    <div class="container" style="text-align:center;">
+      <div style="display:flex;justify-content:center;gap:16px;margin-bottom:16px;">
+        <a href="#" onclick="return false" style="color:#A8A29E;font-size:1.2rem;"><i class="ti ti-brand-instagram"></i></a>
+        <a href="#" onclick="return false" style="color:#A8A29E;font-size:1.2rem;"><i class="ti ti-brand-facebook"></i></a>
+        <a href="https://wa.me/573057708315" style="color:#25D366;font-size:1.2rem;" target="_blank"><i class="ti ti-brand-whatsapp"></i></a>
+      </div>
+      <p style="color:#57534E;font-size:0.85rem;">&copy; 2026 Restaurante Aurora. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- BLOQUE STONELYTICS -->
+  <section style="background:#0F172A;padding:48px 0;">
+    <div class="container" style="text-align:center;">
+      <p style="color:#94A3B8;font-size:0.85rem;margin-bottom:8px;">Este sitio fue construido utilizando</p>
+      <h3 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Sistema Digital Start</h3>
+      <p style="color:#64748B;font-size:0.85rem;margin-bottom:20px;">Tu empresa podría verse exactamente así.</p>
+      <a href="/" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--accent-blue);color:#fff;border-radius:var(--radius-sm);font-weight:600;text-decoration:none;font-size:0.9rem;">
+        <i class="ti ti-arrow-left"></i> Volver a Stonelytics
+      </a>
+    </div>
+  </section>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/573057708315?text=Hola!%20Quiero%20reservar%20una%20mesa" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Reservar por WhatsApp" style="background:#25D366;">
+    <i class="ti ti-brand-whatsapp"></i>
+  </a>
+
+  <script>
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (nav) nav.classList.toggle('navbar--scrolled', window.scrollY > 50);
+  });
+  // Burger menu
+  const burger = document.getElementById('burger');
+  const links = document.querySelector('.navbar__links');
+  if (burger && links) {
+    burger.addEventListener('click', () => links.classList.toggle('open'));
+  }
+  </script>
+{% endblock %}

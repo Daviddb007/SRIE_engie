@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/landing.css">{% endblock %}
+
+{% block body %}
+  {% include "components/navbar.html" %}
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__bg"></div>
+    <div class="container hero__grid">
+      <div class="hero__content">
+        <div class="hero__badge"><i class="ti ti-bolt"></i> Sistemas Digitales Empresariales</div>
+        <h1>Tu negocio necesita más que una página web.<span> Necesita un sistema.</span></h1>
+        <p class="hero__subtitle">Diseñamos, implementamos y administramos Sistemas Digitales que ayudan a las empresas a captar, administrar y hacer crecer sus oportunidades comerciales. No construimos páginas web. Construimos software.</p>
+        <div class="hero__actions">
+          <a href="#contacto" class="btn btn--primary btn--lg">Quiero mi Sistema <i class="ti ti-arrow-right"></i></a>
+          <a href="#sistemas" class="btn btn--outline btn--lg"><i class="ti ti-player-play"></i> Ver demo</a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero__stat"><span class="hero__stat-value">3</span><span class="hero__stat-label">Niveles de evolución</span></div>
+          <div class="hero__stat"><span class="hero__stat-value">15+</span><span class="hero__stat-label">Capacidades</span></div>
+          <div class="hero__stat"><span class="hero__stat-value">24/7</span><span class="hero__stat-label">Operando</span></div>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="video-container">
+          <div class="video-player">
+            <video id="demoVideo" preload="metadata" poster="" muted playsinline>
+              <source src="/static/video/demo.mp4" type="video/mp4">
+            </video>
+            <div class="video-player__overlay" id="videoOverlay">
+              <div class="video-play-btn"><svg width="2em" height="2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13 -8l-13 -8"/></svg></div>
+              <span class="video-player__text">Mira cómo funciona tu Sistema Digital</span>
+              <span class="video-player__duration">25 segundos</span>
+            </div>
+          </div>
+          <div class="video-info">
+            <span class="video-info__label">Demo: Sistema Digital en acción</span>
+            <div class="video-info__stats">
+              <span class="video-info__stat"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg> 1.2k</span>
+              <span class="video-info__stat"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg> 98%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="section section--light" id="problema">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge"><i class="ti ti-alert-triangle"></i> El problema</span>
+        <h2>Tu empresa pierde oportunidades <span>cada día sin el sistema correcto</span></h2>
+        <p class="section__subtitle">La mayoría de pequeñas y medianas empresas tienen una presencia digital que no trabaja para ellas.</p>
+      </div>
+      <div class="problems-grid">
+        <div class="problem-card"><div class="problem-card__icon problem-card__icon--red"><i class="ti ti-device-mobile-off"></i></div><h4>Presencia que no transmite confianza</h4><p>Sitios web desactualizados o poco profesionales que alejan clientes potenciales.</p></div>
+        <div class="problem-card"><div class="problem-card__icon problem-card__icon--red"><i class="ti ti-message-off"></i></div><h4>Sitio únicamente informativo</h4><p>Un folleto digital que no genera interacción ni captura oportunidades.</p></div>
+        <div class="problem-card"><div class="problem-card__icon problem-card__icon--red"><i class="ti ti-filter-off"></i></div><h4>Sin mecanismos de captación</h4><p>Los visitantes llegan y se van sin dejar rastro de interés.</p></div>
+        <div class="problem-card"><div class="problem-card__icon problem-card__icon--red"><i class="ti ti-eye-off"></i></div><h4>No sabes qué pasa después del formulario</h4><p>Los leads llegan pero no hay seguimiento automatizado ni organización.</p></div>
+        <div class="problem-card"><div class="problem-card__icon problem-card__icon--red"><i class="ti ti-clock-off"></i></div><h4>Procesos comerciales manuales</h4><p>Cada contacto se gestiona a mano, sin herramientas que escalen.</p></div>
+        <div class="problem-card"><div class="problem-card__icon problem-card__icon--red"><i class="ti ti-lock-off"></i></div><h4>Sin herramientas que evolucionen</h4><p>El sitio web no crece con el negocio. Cada cambio requiere un desarrollador.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SISTEMAS DIGITALES -->
+  <section class="section" id="sistemas">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge"><i class="ti ti-packages"></i> Sistemas Digitales</span>
+        <h2>Tres niveles de <span>madurez digital</span></h2>
+        <p class="section__subtitle">No necesitas decidir dónde terminarás. Solo necesitas dar el primer paso.</p>
+      </div>
+      <div class="evolution-line">
+        <div class="evolution-step"><div class="evolution-step__dot evolution-step__dot--start"></div><span class="evolution-step__label">START</span><span class="evolution-step__desc">Presencia</span></div>
+        <div class="evolution-connector"></div>
+        <div class="evolution-step"><div class="evolution-step__dot evolution-step__dot--growth"></div><span class="evolution-step__label">GROWTH</span><span class="evolution-step__desc">Conversión</span></div>
+        <div class="evolution-connector"></div>
+        <div class="evolution-step"><div class="evolution-step__dot evolution-step__dot--intelligence"></div><span class="evolution-step__label">INTELLIGENCE</span><span class="evolution-step__desc">Inteligencia</span></div>
+      </div>
+      <div class="systems-grid">
+        <div class="system-card">
+          <div class="system-card__header system-card__header--blue"><span class="system-card__tier">START</span><h3>Presencia Profesional</h3><p class="system-card__tagline">"Hacer que tu empresa se vea profesional."</p></div>
+          <div class="system-card__body">
+            <ul class="system-card__features">
+              <li><i class="ti ti-check"></i> Hero moderno y atractivo</li>
+              <li><i class="ti ti-check"></i> Sección de servicios</li>
+              <li><i class="ti ti-check"></i> Casos de éxito</li>
+              <li><i class="ti ti-check"></i> Formulario de contacto</li>
+              <li><i class="ti ti-check"></i> Integración WhatsApp</li>
+              <li><i class="ti ti-check"></i> Diseño 100% responsive</li>
+            </ul>
+            <a href="/demo/start" class="btn btn--outline btn--block" style="border-color:var(--border);color:var(--text-primary);"><i class="ti ti-rocket"></i> Explorar demostración</a>
+          </div>
+        </div>
+        <div class="system-card system-card--featured">
+          <span class="system-card__badge">Más elegido</span>
+          <div class="system-card__header system-card__header--green"><span class="system-card__tier">GROWTH</span><h3>Conversión y Gestión</h3><p class="system-card__tagline">"Convertir visitantes en oportunidades."</p></div>
+          <div class="system-card__body">
+            <ul class="system-card__features">
+              <li><i class="ti ti-check"></i> Todo del sistema Start</li>
+              <li><i class="ti ti-check"></i> Diagnóstico interactivo</li>
+              <li><i class="ti ti-check"></i> Quiz de captación</li>
+              <li><i class="ti ti-check"></i> Agenda de citas</li>
+              <li><i class="ti ti-check"></i> Formularios inteligentes</li>
+              <li><i class="ti ti-check"></i> Seguimiento de oportunidades</li>
+            </ul>
+            <a href="/demo/growth" class="btn btn--primary btn--block"><i class="ti ti-rocket"></i> Explorar demostración</a>
+          </div>
+        </div>
+        <div class="system-card">
+          <div class="system-card__header system-card__header--amber"><span class="system-card__tier">INTELLIGENCE</span><h3>Inteligencia Operativa</h3><p class="system-card__tagline">"Hacer que tu empresa opere de forma más inteligente."</p></div>
+          <div class="system-card__body">
+            <ul class="system-card__features">
+              <li><i class="ti ti-check"></i> Todo del sistema Growth</li>
+              <li><i class="ti ti-check"></i> Diagnóstico inteligente con IA</li>
+              <li><i class="ti ti-check"></i> Clasificación de oportunidades</li>
+              <li><i class="ti ti-check"></i> Generación de recomendaciones</li>
+              <li><i class="ti ti-check"></i> Asistente especializado</li>
+              <li><i class="ti ti-check"></i> Dashboard con KPIs</li>
+            </ul>
+            <a href="/demo/intelligence" class="btn btn--outline btn--block" style="border-color:var(--border);color:var(--text-primary);"><i class="ti ti-rocket"></i> Explorar demostración</a>
+          </div>
+        </div>
+      </div>
+      <div class="emotional-block"><h3>Tu empresa crece.<br>Tu Sistema Digital también.</h3><p>Nunca tendrás que empezar desde cero. Tu sistema evoluciona contigo.</p></div>
+    </div>
+  </section>
+
+  <!-- CAPACIDADES -->
+  <section class="section section--light" id="capacidades">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge"><i class="ti ti-puzzle"></i> Capacidades</span>
+        <h2>¿Qué puede hacer un <span>Sistema Digital</span>?</h2>
+        <p class="section__subtitle">Cada Sistema Digital se compone de capacidades reutilizables que se activan según las necesidades de tu negocio.</p>
+      </div>
+      <div class="capabilities-grid">
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-presentation"></i></div><h4>Presentar tu empresa</h4><p>Muestra tu negocio de forma profesional con un diseño moderno.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-target-arrow"></i></div><h4>Captar clientes</h4><p>Atrae y convierte visitantes en oportunidades de negocio reales.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-robot"></i></div><h4>Automatizar tareas</h4><p>Elimina procesos manuales con flujos automáticos inteligentes.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-calendar-event"></i></div><h4>Agendar reuniones</h4><p>Permite que tus clientes agenden citas directamente.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-file-text"></i></div><h4>Generar cotizaciones</h4><p>Crea propuestas comerciales automáticamente.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-message-chatbot"></i></div><h4>Responder consultas</h4><p>Atiende preguntas frecuentes 24/7 con IA.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-filter"></i></div><h4>Clasificar oportunidades</h4><p>Identifica y prioriza automáticamente los mejores prospectos.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-database"></i></div><h4>Centralizar información</h4><p>Toda la información de tu negocio en un solo lugar.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-chart-bar"></i></div><h4>Generar reportes</h4><p>Obtén métricas y reportes para mejores decisiones.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-api"></i></div><h4>Integrarse con plataformas</h4><p>Conecta con Google, WhatsApp, calendarios y más.</p></div>
+        <div class="capability-card"><div class="capability-card__icon"><i class="ti ti-trending-up"></i></div><h4>Escalar con tu empresa</h4><p>Tu sistema crece cuando tu negocio crece.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO TRABAJAMOS -->
+  <section class="section" id="como-trabajamos">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge"><i class="ti ti-route"></i> Cómo Trabajamos</span>
+        <h2>Tres pasos hacia tu <span>Sistema Digital</span></h2>
+        <p class="section__subtitle">Un proceso claro, profesional y sin sorpresas.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-card__number">1</div><div class="step-card__icon"><i class="ti ti-pencil-ruler"></i></div><h4>Construimos tu Sistema Digital</h4><div class="step-card__details"><span>Análisis del negocio</span><span>Diseño de la solución</span><span>Implementación</span></div></div>
+        <div class="step-card__connector"><i class="ti ti-arrow-right"></i></div>
+        <div class="step-card"><div class="step-card__number">2</div><div class="step-card__icon"><i class="ti ti-rocket"></i></div><h4>Lo ponemos en funcionamiento</h4><div class="step-card__details"><span>Configuración</span><span>Dominio</span><span>Seguridad</span><span>Publicación</span></div></div>
+        <div class="step-card__connector"><i class="ti ti-arrow-right"></i></div>
+        <div class="step-card"><div class="step-card__number">3</div><div class="step-card__icon"><i class="ti ti-settings"></i></div><h4>Lo administramos y evolucionamos</h4><div class="step-card__details"><span>Mantenimiento</span><span>Monitoreo</span><span>Actualizaciones</span><span>Nuevas capacidades</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS DE USO -->
+  <section class="section section--light" id="casos">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge"><i class="ti ti-layout-grid"></i> Casos de Uso</span>
+        <h2>Así funcionan <span>los Sistemas Digitales</span></h2>
+        <p class="section__subtitle">Cada industria tiene necesidades diferentes. Mira cómo se adapta un Sistema Digital a tu caso.</p>
+      </div>
+      <div class="cases-grid">
+        <div class="case-card">
+          <div class="case-card__preview case-card__preview--1"><div class="case-card__overlay"><span class="badge badge--white">Restaurante</span></div></div>
+          <div class="case-card__info">
+            <h4>La Cocina de María</h4>
+            <p>Restaurante familiar en Bogotá que necesitaba presencia digital y reservas.</p>
+            <div class="case-card__tags"><span class="tag">Landing Page</span><span class="tag">Agenda</span><span class="tag">WhatsApp</span></div>
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-card__preview case-card__preview--2"><div class="case-card__overlay"><span class="badge badge--white">Clínica</span></div></div>
+          <div class="case-card__info">
+            <h4>Salud Total</h4>
+            <p>Clínica dental que quería automatizar citas y captar pacientes online.</p>
+            <div class="case-card__tags"><span class="tag">Quiz</span><span class="tag">Citas</span><span class="tag">Automatización</span></div>
+          </div>
+        </div>
+        <div class="case-card">
+          <div class="case-card__preview case-card__preview--3"><div class="case-card__overlay"><span class="badge badge--white">Consultora</span></div></div>
+          <div class="case-card__info">
+            <h4>StrategyPro</h4>
+            <p>Consultora de negocios que necesitaba calificar leads y cotizar automáticamente.</p>
+            <div class="case-card__tags"><span class="tag">Dashboard</span><span class="tag">Cotizador</span><span class="tag">IA</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVERSIÓN -->
+  <section class="section" id="inversion">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge"><i class="ti ti-coins"></i> Inversión</span>
+        <h2>Un modelo <span>simple y predecible</span></h2>
+        <p class="section__subtitle">Nunca pagarás por funcionalidades que no necesitas. Sin sorpresas. Sin costos ocultos.</p>
+      </div>
+      <div class="investment-grid">
+        <div class="investment-card"><div class="investment-card__icon"><i class="ti ti-rocket"></i></div><h4>Implementación Inicial</h4><p>Diseñamos, personalizamos e implementamos tu Sistema Digital completo.</p></div>
+        <div class="investment-card__arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="investment-card"><div class="investment-card__icon"><i class="ti ti-settings"></i></div><h4>Administración Mensual</h4><p>Monitoreo, mantenimiento, seguridad, respaldos y soporte técnico.</p></div>
+        <div class="investment-card__arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="investment-card"><div class="investment-card__icon"><i class="ti ti-trending-up"></i></div><h4>Evolución Continua</h4><p>Nuevas capacidades, mejoras y actualizaciones continuas.</p></div>
+      </div>
+      <p class="investment-note">El objetivo es que nunca tengas que preocuparte por la infraestructura digital de tu negocio.</p>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACTO -->
+  <section class="section section--dark" id="contacto">
+    <div class="container cta-grid">
+      <div class="cta-content">
+        <span class="badge badge--green"><i class="ti ti-sparkles"></i> Empieza hoy</span>
+        <h2>Tu Sistema Digital está a un mensaje de distancia</h2>
+        <p>Cuéntanos sobre tu negocio y te contactaremos en menos de 24 horas con una propuesta personalizada.</p>
+        <a href="https://wa.me/{{ whatsapp_number }}?text=Hola!%20Me%20interesa%20un%20Sistema%20Digital%20para%20mi%20negocio." class="btn btn--whatsapp btn--lg" target="_blank" rel="noopener">
+          <i class="ti ti-brand-whatsapp"></i> Escribirnos por WhatsApp
+        </a>
+      </div>
+
+      <!-- MULTI-STEP FORM -->
+      <div class="form-wizard" id="formWizard">
+        <div class="form-wizard__progress">
+          <div class="form-wizard__step form-wizard__step--active" data-step="1">
+            <span class="form-wizard__step-num">1</span>
+            <span class="form-wizard__step-label">Tu negocio</span>
+          </div>
+          <div class="form-wizard__connector"></div>
+          <div class="form-wizard__step" data-step="2">
+            <span class="form-wizard__step-num">2</span>
+            <span class="form-wizard__step-label">Tus retos</span>
+          </div>
+          <div class="form-wizard__connector"></div>
+          <div class="form-wizard__step" data-step="3">
+            <span class="form-wizard__step-num">3</span>
+            <span class="form-wizard__step-label">Tu sistema</span>
+          </div>
+        </div>
+
+        <form id="contactForm">
+          <!-- STEP 1 -->
+          <div class="form-wizard__panel form-wizard__panel--active" data-panel="1">
+            <div class="form-group">
+              <label for="name">Nombre completo *</label>
+              <input type="text" id="name" name="name" required placeholder="Tu nombre">
+            </div>
+            <div class="form-group">
+              <label for="email">Correo electrónico *</label>
+              <input type="email" id="email" name="email" required placeholder="correo@empresa.com">
+            </div>
+            <div class="form-group">
+              <label for="whatsapp">WhatsApp</label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="+57 300 123 4567">
+            </div>
+            <div class="form-group">
+              <label for="business_type">¿Qué tipo de empresa tienes? *</label>
+              <select id="business_type" name="business_type" required>
+                <option value="">Seleccionar...</option>
+                <option value="restaurante">Restaurante / Café</option>
+                <option value="salud">Clínica / Consultorio</option>
+                <option value="legal">Estudio Jurídico</option>
+                <option value="consultora">Consultora / Agencia</option>
+                <option value="retail">Tienda / Retail</option>
+                <option value="servicios">Servicios Profesionales</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="team_size">¿Cuántas personas trabajan contigo? *</label>
+              <select id="team_size" name="team_size" required>
+                <option value="">Seleccionar...</option>
+                <option value="1-5">1 - 5 personas</option>
+                <option value="6-15">6 - 15 personas</option>
+                <option value="16-50">16 - 50 personas</option>
+                <option value="50+">Más de 50 personas</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn--primary btn--block btn--lg wizard-next" data-next="2">
+              Continuar <i class="ti ti-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="form-wizard__panel" data-panel="2">
+            <div class="form-group">
+              <label for="challenge">¿Cuál es tu principal reto actual? *</label>
+              <select id="challenge" name="challenge" required>
+                <option value="">Seleccionar...</option>
+                <option value="presencia">No tengo presencia digital</option>
+                <option value="captacion">No capto clientes online</option>
+                <option value="procesos">Mis procesos son manuales</option>
+                <option value="herramientas">No tengo herramientas digitales</option>
+                <option value="tiempo">No tengo tiempo para administrar</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="acquisition">¿Cómo llegan hoy tus clientes?</label>
+              <select id="acquisition" name="acquisition">
+                <option value="">Seleccionar...</option>
+                <option value="referidos">Referidos / Boca a boca</option>
+                <option value="redes">Redes sociales</option>
+                <option value="google">Google / Búsqueda</option>
+                <option value="publicidad">Publicidad pagada</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="process">¿Qué proceso quisieras mejorar?</label>
+              <textarea id="process" name="process" rows="2" placeholder="Ej: Captar más clientes, automatizar cotizaciones, agendar citas..."></textarea>
+            </div>
+            <div class="form-wizard__build" id="buildPreview">
+              <h4><i class="ti ti-sparkles"></i> Tu Sistema Digital se está construyendo</h4>
+              <div class="build-modules" id="buildModules"></div>
+            </div>
+            <div class="form-wizard__buttons">
+              <button type="button" class="btn btn--outline wizard-prev" data-prev="1"><i class="ti ti-arrow-left"></i> Atrás</button>
+              <button type="button" class="btn btn--primary wizard-next" data-next="3">Ver resultado <i class="ti ti-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="form-wizard__panel" data-panel="3">
+            <div class="form-wizard__result" id="formResult">
+              <div class="form-wizard__result-icon"><i class="ti ti-check"></i></div>
+              <h3>Tu Sistema Digital está listo</h3>
+              <p>Hemos diseñado una solución personalizada para tu negocio.</p>
+              <div class="form-wizard__modules" id="resultModules"></div>
+              <div class="form-wizard__next-steps">
+                <h4>Próximos pasos:</h4>
+                <ul>
+                  <li><i class="ti ti-check"></i> Revisamos tu solicitud</li>
+                  <li><i class="ti ti-check"></i> Diseñamos tu propuesta</li>
+                  <li><i class="ti ti-check"></i> Te contactamos en 24h</li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-wizard__buttons">
+              <button type="button" class="btn btn--outline wizard-prev" data-prev="2"><i class="ti ti-arrow-left"></i> Atrás</button>
+              <button type="submit" class="btn btn--primary btn--lg" id="submitBtn">
+                <span class="btn__text">Enviar solicitud</span>
+                <span class="btn__loader" hidden><i class="ti ti-loader-2 ti-spin"></i></span>
+              </button>
+            </div>
+            <div class="form-message" id="formMessage"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  {% include "components/footer.html" %}
+  {% include "components/whatsapp_float.html" %}
+
+  <script src="/static/js/main.js"></script>
+  <script src="/static/js/form-wizard.js"></script>
+{% endblock %}

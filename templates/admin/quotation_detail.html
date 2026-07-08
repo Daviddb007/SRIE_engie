@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ quotation.quotation_number }} — Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'quotations' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>{{ quotation.quotation_number }} — {{ quotation.title }}</h1>
+      <div style="display:flex;gap:8px;">
+        <span class="badge badge--outline">{{ quotation.status }}</span>
+        <a href="/admin/quotations/{{ quotation.id }}/pdf" class="btn btn--primary" target="_blank"><i class="ti ti-download"></i> PDF</a>
+      </div>
+    </header>
+    <div class="admin-content">
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Información</h3></div>
+          <div class="admin-card__body" style="padding:24px;">
+            <p><strong>Cliente:</strong> {{ quotation.client.company_name }}</p>
+            <p><strong>Contacto:</strong> {{ quotation.client.contact_name }}</p>
+            <p><strong>Email:</strong> {{ quotation.client.contact_email }}</p>
+            <p><strong>Vigencia:</strong> {{ quotation.valid_until.strftime('%d/%m/%Y') if quotation.valid_until else '—' }}</p>
+            <p><strong>Timeline:</strong> {{ quotation.timeline_weeks ~ ' semanas' if quotation.timeline_weeks else '—' }}</p>
+            {% if quotation.notes %}<p style="margin-top:12px;"><strong>Notas:</strong> {{ quotation.notes }}</p>{% endif %}
+          </div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Resumen financiero</h3></div>
+          <div class="admin-card__body" style="padding:24px;">
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+              <span>Subtotal</span><strong>${{ '{:,.2f}'.format(quotation.total_price) }}</strong>
+            </div>
+            {% if quotation.discount_pct and quotation.discount_pct > 0 %}
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);color:var(--red);">
+              <span>Descuento ({{ quotation.discount_pct }}%)</span><span>-${{ '{:,.2f}'.format(quotation.total_price * quotation.discount_pct / 100) }}</span>
+            </div>
+            {% endif %}
+            <div style="display:flex;justify-content:space-between;padding:12px 0;font-size:1.3rem;">
+              <strong>Total</strong><strong style="color:var(--accent-blue);">${{ '{:,.2f}'.format(quotation.final_price) }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-top:24px;">
+        <div class="admin-card__header"><h3>Items</h3></div>
+        <table class="admin-table">
+          <thead><tr><th>Descripción</th><th>Tipo</th><th>Cantidad</th><th>Precio Unit.</th><th>Total</th></tr></thead>
+          <tbody>
+            {% for item in quotation.items %}
+            <tr>
+              <td>{{ item.description }}</td>
+              <td><span class="badge badge--outline">{{ item.item_type }}</span></td>
+              <td>{{ item.quantity }}</td>
+              <td>${{ '{:,.2f}'.format(item.unit_price) }}</td>
+              <td>${{ '{:,.2f}'.format(item.total_price) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if quotation.scope %}
+      <div class="admin-card" style="margin-top:24px;">
+        <div class="admin-card__header"><h3>Alcance</h3></div>
+        <div class="admin-card__body" style="padding:24px;">
+          <p style="white-space:pre-line;">{{ quotation.scope }}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

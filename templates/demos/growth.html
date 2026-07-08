@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% block title %}Demo Growth — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/landing.css">{% endblock %}
+
+{% block body %}
+  <nav class="navbar">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo">
+        <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" class="navbar__logo-icon" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
+        <div class="navbar__logo-text">
+          <span class="navbar__brand">Stonelytics</span>
+          <span class="navbar__tagline">INTELIGENCIA DIGITAL</span>
+        </div>
+      </a>
+      <span class="badge badge--green"><i class="ti ti-rocket"></i> Demo: Sistema Growth</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="section" style="padding:60px 0 40px;">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge badge--outline"><i class="ti ti-message-chatbot"></i> Demo Interactiva</span>
+        <h2>Convierte visitantes en <span class="gradient-text">oportunidades</span></h2>
+        <p class="section__subtitle">Un Sistema Growth captura leads, califica oportunidades y genera dashboards automáticos. Prueba el flujo completo.</p>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div style="display:flex;justify-content:center;gap:0;margin-bottom:40px;flex-wrap:wrap;">
+        <div class="flow-step-indicator active" data-goto="1">
+          <div class="flow-step-indicator__num">1</div>
+          <span>Quiz</span>
+        </div>
+        <div class="flow-step-indicator__line"></div>
+        <div class="flow-step-indicator" data-goto="2">
+          <div class="flow-step-indicator__num">2</div>
+          <span>Contacto</span>
+        </div>
+        <div class="flow-step-indicator__line"></div>
+        <div class="flow-step-indicator" data-goto="3">
+          <div class="flow-step-indicator__num">3</div>
+          <span>Resultado</span>
+        </div>
+        <div class="flow-step-indicator__line"></div>
+        <div class="flow-step-indicator" data-goto="4">
+          <div class="flow-step-indicator__num">4</div>
+          <span>Dashboard</span>
+        </div>
+      </div>
+
+      <!-- QUIZ CARD -->
+      <div style="max-width:640px;margin:0 auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;" id="growthCard">
+        <div style="background:var(--bg-dark);padding:20px 32px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <svg viewBox="0 0 32 32" fill="none" style="width:32px;height:32px;">
+              <rect width="32" height="32" rx="8" fill="#2563EB"/>
+              <path d="M8 16L12 10L20 18L24 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="24" cy="12" r="2.5" fill="#10B981"/>
+            </svg>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--white);font-size:1.1rem;">Stonelytics</span>
+          </div>
+          <div id="quizProgress" style="display:flex;gap:6px;">
+            {% for step in steps %}
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s;" data-step="{{ step.id }}"></div>
+            {% endfor %}
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s;" data-step="contact"></div>
+          </div>
+        </div>
+
+        <div style="padding:36px 32px;" id="quizBody">
+          {% for step in steps %}
+          <div class="quiz-step" data-step="{{ step.id }}" style="display:none;">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:24px;line-height:1.2;">
+              <span style="display:inline-block;background:var(--accent-blue);color:var(--white);width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-size:0.8rem;font-weight:700;margin-right:10px;">{{ step.id }}</span>{{ step.question }}
+            </h2>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              {% for option in step.options %}
+              <div class="quiz-option" data-step="{{ step.id }}" data-value="{{ option.value }}" data-points="{{ option.points }}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:0.95rem;font-weight:500;">
+                <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all 0.2s;"></div>
+                <span>{{ option.label }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+
+          <div id="quizContact" style="display:none;">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:24px;">
+              <span style="display:inline-block;background:var(--accent-blue);color:var(--white);width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-size:0.8rem;font-weight:700;margin-right:10px;"><i class="ti ti-user" style="font-size:0.9rem"></i></span>¿Cómo te contactamos?
+            </h2>
+            <div style="margin-bottom:16px;">
+              <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px;">Nombre completo *</label>
+              <input type="text" id="qName" required placeholder="Tu nombre" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;background:var(--bg-light);">
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px;">Correo electrónico *</label>
+              <input type="email" id="qEmail" required placeholder="correo@empresa.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;background:var(--bg-light);">
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px;">WhatsApp</label>
+              <input type="tel" id="qPhone" placeholder="+57 300 123 4567" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;background:var(--bg-light);">
+            </div>
+          </div>
+
+          <div id="quizResult" style="display:none;text-align:center;">
+            <div style="width:72px;height:72px;border-radius:50%;background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;color:var(--accent-green);"><i class="ti ti-rocket"></i></div>
+            <h2 id="resultPlan" style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;margin-bottom:8px;"></h2>
+            <p id="resultDescription" style="color:var(--text-secondary);margin-bottom:24px;"></p>
+            <button onclick="showDashboard()" class="btn btn--primary btn--lg" style="margin-top:12px;">
+              <i class="ti ti-layout-dashboard"></i> Ver Dashboard
+            </button>
+          </div>
+
+          <!-- DASHBOARD SIMULATION -->
+          <div id="quizDashboard" style="display:none;">
+            <div style="text-align:center;margin-bottom:24px;">
+              <span class="badge badge--green"><i class="ti ti-layout-dashboard"></i> Dashboard de Ejemplo</span>
+              <h3 style="margin-top:12px;">Así se ve tu panel de control</h3>
+              <p style="color:var(--text-muted);font-size:0.85rem;">Datos simulados del último mes</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;">
+              <div style="background:rgba(37,99,235,0.06);border-radius:var(--radius);padding:20px;text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent-blue);">127</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Visitas este mes</div>
+              </div>
+              <div style="background:rgba(16,185,129,0.06);border-radius:var(--radius);padding:20px;text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent-green);">34</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Leads captados</div>
+              </div>
+              <div style="background:rgba(217,119,6,0.06);border-radius:var(--radius);padding:20px;text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent-amber);">12</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Cotizaciones enviadas</div>
+              </div>
+              <div style="background:rgba(139,92,246,0.06);border-radius:var(--radius);padding:20px;text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:#8B5CF6;">8</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Conversiones</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-light);border-radius:var(--radius);padding:20px;margin-bottom:16px;">
+              <h4 style="margin-bottom:12px;font-size:0.85rem;">Actividad reciente</h4>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--accent-green);"></span>
+                  <span style="color:var(--text-muted);">Hace 2h</span>
+                  <span>Nuevo lead: María González</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--accent-blue);"></span>
+                  <span style="color:var(--text-muted);">Hace 5h</span>
+                  <span>Cotización #QT-0012 enviada</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--accent-amber);"></span>
+                  <span style="color:var(--text-muted);">Ayer</span>
+                  <span>Reserva confirmada: Carlos Méndez</span>
+                </div>
+              </div>
+            </div>
+            <a href="/" style="display:block;text-align:center;padding:12px;background:var(--accent-blue);color:#fff;border-radius:var(--radius-sm);font-weight:600;text-decoration:none;">
+              <i class="ti ti-home"></i> Volver a Stonelytics
+            </a>
+          </div>
+        </div>
+
+        <div id="quizFooter" style="padding:0 32px 32px;display:flex;gap:12px;">
+          <button class="btn btn--outline" id="quizPrev" style="color:var(--text-primary);border-color:var(--border);display:none;flex:1;">
+            <i class="ti ti-arrow-left"></i> Anterior
+          </button>
+          <button class="btn btn--primary" id="quizNext" style="flex:1;">
+            Siguiente <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+  .flow-step-indicator { display:flex;flex-direction:column;align-items:center;gap:6px; }
+  .flow-step-indicator__num { width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;transition:all 0.3s; }
+  .flow-step-indicator.active .flow-step-indicator__num { background:var(--accent-blue);color:#fff; }
+  .flow-step-indicator.done .flow-step-indicator__num { background:var(--accent-green);color:#fff; }
+  .flow-step-indicator span { font-size:0.75rem;color:var(--text-muted); }
+  .flow-step-indicator.active span { color:var(--accent-blue);font-weight:600; }
+  .flow-step-indicator__line { width:40px;height:2px;background:var(--border);margin-top:14px; }
+  </style>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const totalSteps = document.querySelectorAll('.quiz-step').length;
+    let currentStep = 1;
+    const answers = [];
+    const prevBtn = document.getElementById('quizPrev');
+    const nextBtn = document.getElementById('quizNext');
+    const progressDots = document.querySelectorAll('#quizProgress [data-step]');
+    const quizContact = document.getElementById('quizContact');
+    const quizResult = document.getElementById('quizResult');
+    const quizDashboard = document.getElementById('quizDashboard');
+    const flowIndicators = document.querySelectorAll('.flow-step-indicator');
+
+    function getFlowStep() {
+      if (currentStep <= totalSteps) return 1;
+      if (currentStep === totalSteps + 1) return 2;
+      if (currentStep === totalSteps + 2) return 3;
+      return 4;
+    }
+
+    function updateFlowIndicators() {
+      const fs = getFlowStep();
+      flowIndicators.forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i + 1 < fs) el.classList.add('done');
+        else if (i + 1 === fs) el.classList.add('active');
+      });
+    }
+
+    function updateUI() {
+      document.querySelectorAll('.quiz-step').forEach(s => s.style.display = 'none');
+      quizContact.style.display = 'none';
+      quizResult.style.display = 'none';
+      quizDashboard.style.display = 'none';
+      if (currentStep <= totalSteps) {
+        document.querySelector(`.quiz-step[data-step="${currentStep}"]`).style.display = 'block';
+      } else if (currentStep === totalSteps + 1) {
+        quizContact.style.display = 'block';
+      } else if (currentStep === totalSteps + 2) {
+        quizResult.style.display = 'block';
+        nextBtn.style.display = 'none';
+        prevBtn.style.display = 'none';
+        updateFlowIndicators();
+        return;
+      } else {
+        quizDashboard.style.display = 'block';
+        document.getElementById('quizFooter').style.display = 'none';
+        updateFlowIndicators();
+        return;
+      }
+      progressDots.forEach(dot => {
+        const stepNum = parseInt(dot.dataset.step);
+        dot.style.background = stepNum === currentStep ? 'var(--accent-blue)' : (stepNum < currentStep || (currentStep > totalSteps && stepNum <= totalSteps)) ? 'var(--accent-green)' : 'rgba(255,255,255,0.15)';
+      });
+      prevBtn.style.display = currentStep > 1 ? 'inline-flex' : 'none';
+      nextBtn.innerHTML = currentStep === totalSteps + 1 ? '<span class="btn__text">Enviar</span><span class="btn__loader"><i class="ti ti-loader-2 ti-spin"></i></span>' : 'Siguiente <i class="ti ti-arrow-right"></i>';
+      const selected = document.querySelector(`.quiz-option.selected[data-step="${currentStep}"]`);
+      nextBtn.disabled = !selected && currentStep <= totalSteps;
+      updateFlowIndicators();
+    }
+
+    document.querySelectorAll('.quiz-option').forEach(option => {
+      option.addEventListener('click', () => {
+        const step = option.dataset.step;
+        document.querySelectorAll(`.quiz-option[data-step="${step}"]`).forEach(o => { o.classList.remove('selected'); o.style.borderColor = 'var(--border)'; o.style.background = 'transparent'; });
+        option.classList.add('selected');
+        option.style.borderColor = 'var(--accent-blue)';
+        option.style.background = 'rgba(37,99,235,0.08)';
+        const existing = answers.findIndex(a => a.step === parseInt(step));
+        const answerData = { step: parseInt(step), value: option.dataset.value, points: parseInt(option.dataset.points) };
+        if (existing >= 0) answers[existing] = answerData; else answers.push(answerData);
+        nextBtn.disabled = false;
+      });
+    });
+
+    nextBtn.addEventListener('click', async () => {
+      if (currentStep <= totalSteps) {
+        if (!document.querySelector(`.quiz-option.selected[data-step="${currentStep}"]`)) return;
+        currentStep++;
+        updateUI();
+      } else if (currentStep === totalSteps + 1) {
+        const name = document.getElementById('qName').value.trim();
+        const email = document.getElementById('qEmail').value.trim();
+        const phone = document.getElementById('qPhone').value.trim();
+        if (!name || !email) { alert('Completa los campos obligatorios.'); return; }
+        nextBtn.disabled = true;
+        try {
+          const res = await fetch('/demo/growth/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ answers, contact: { name, email, phone } }) });
+          const data = await res.json();
+          if (data.ok) {
+            document.getElementById('resultPlan').textContent = data.plan.name;
+            document.getElementById('resultDescription').textContent = data.plan.description;
+            currentStep++;
+            updateUI();
+          } else { alert(data.error || 'Error'); nextBtn.disabled = false; }
+        } catch { alert('Error de conexión'); nextBtn.disabled = false; }
+        finally { nextBtn.disabled = false; }
+      }
+    });
+
+    prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateUI(); } });
+    updateUI();
+  });
+
+  function showDashboard() {
+    const body = document.getElementById('quizBody');
+    document.querySelectorAll('.quiz-step, #quizContact, #quizResult').forEach(el => el.style.display = 'none');
+    document.getElementById('quizDashboard').style.display = 'block';
+    document.getElementById('quizFooter').style.display = 'none';
+    document.querySelectorAll('.flow-step-indicator').forEach((el, i) => {
+      el.classList.remove('active');
+      el.classList.add('done');
+    });
+  }
+  </script>
+
+  <a href="/" style="position:fixed;bottom:28px;left:28px;z-index:90;" class="btn btn--primary"><i class="ti ti-arrow-left"></i> Volver</a>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Brechas — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Matriz de Brechas</h1>
+      <div style="display:flex;gap:8px;">
+        <a href="/studio/{{ consultoria.id }}/plan" class="btn btn--primary btn--sm">Generar Plan SRIE →</a>
+      </div>
+    </header>
+    <div class="admin-content">
+      {% if brechas %}
+      <table class="brechas-table">
+        <thead>
+          <tr>
+            <th>Capa</th>
+            <th>Problema Actual</th>
+            <th>Estado Deseado</th>
+            <th>Impacto</th>
+            <th>Prioridad</th>
+            <th>Solución</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in brechas %}
+          <tr>
+            <td><strong>{{ b.capa }}</strong></td>
+            <td>{{ b.problema_actual }}</td>
+            <td>{{ b.estado_deseado }}</td>
+            <td>
+              <select class="impacto-select" onchange="actualizarBrecha('{{ b.id }}', 'impacto', this.value)">
+                <option value="alta" {{ 'selected' if b.impacto == 'alta' }}>Alto</option>
+                <option value="media" {{ 'selected' if b.impacto == 'media' }}>Medio</option>
+                <option value="baja" {{ 'selected' if b.impacto == 'baja' }}>Bajo</option>
+              </select>
+            </td>
+            <td>
+              <select class="prioridad-select" onchange="actualizarBrecha('{{ b.id }}', 'prioridad', this.value)">
+                <option value="alta" {{ 'selected' if b.prioridad == 'alta' }}>Alta</option>
+                <option value="media" {{ 'selected' if b.prioridad == 'media' }}>Media</option>
+                <option value="baja" {{ 'selected' if b.prioridad == 'baja' }}>Baja</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" value="{{ b.solucion or '' }}" class="prioridad-select" style="width:100%;" onchange="actualizarBrecha('{{ b.id }}', 'solucion', this.value)" placeholder="Solución...">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="twin-actions">
+        <button class="btn btn--primary" onclick="generarPlan()" id="btn-generar-plan">Generar Plan Recomendado</button>
+      </div>
+      {% else %}
+      <div class="admin-card">
+        <div class="admin-card__body" style="text-align:center;padding:60px;">
+          <i class="ti ti-alert-triangle" style="font-size:2rem;color:var(--text-muted);"></i>
+          <p style="color:var(--text-muted);margin-top:16px;">No hay brechas calculadas aún.</p>
+          <button class="btn btn--primary" onclick="calcularBrechas()">Calcular Brechas</button>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="/static/studio/gemelo.js"></script>
+<script>
+const CONSULTORIA_ID = '{{ consultoria.id }}';
+
+async function actualizarBrecha(brechaId, campo, valor) {
+    await fetch(`/studio/api/brechas/${brechaId}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ [campo]: valor }),
+    });
+}
+</script>
+{% endblock %}

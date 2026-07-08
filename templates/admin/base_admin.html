@@ -1,0 +1,26 @@
+{# Admin base template - reduces boilerplate in admin pages #}
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = active_page | default('dashboard') %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>{% block admin_title %}Admin{% endblock %}</h1>
+      {% block admin_actions %}{% endblock %}
+    </header>
+    <div class="admin-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for cat, msg in messages %}
+      <div class="alert alert--{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      {% block admin_content %}{% endblock %}
+    </div>
+  </main>
+</div>
+{% endblock %}

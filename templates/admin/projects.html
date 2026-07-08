@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Proyectos — Admin Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'projects' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Proyectos</h1>
+      <a href="/admin/projects/new" class="btn btn--primary"><i class="ti ti-plus"></i> Nuevo proyecto</a>
+    </header>
+    <div class="admin-content">
+      <div class="admin-card">
+        <table class="admin-table">
+          <thead><tr><th>Nombre</th><th>Cliente</th><th>Sistema</th><th>Estado</th><th>Creado</th></tr></thead>
+          <tbody>
+            {% for p in projects %}
+            <tr>
+              <td><strong><a href="/admin/projects/{{ p.id }}" style="color:var(--accent-blue);">{{ p.name }}</a></strong></td>
+              <td>{{ p.client.company_name }}</td>
+              <td><span class="badge badge--outline">{{ p.system_type }}</span></td>
+              <td>{{ p.status }}</td>
+              <td>{{ p.created_at.strftime('%d/%m/%Y') }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:32px;">No hay proyectos</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

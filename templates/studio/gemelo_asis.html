@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block title %}Blueprint — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Blueprint Empresarial — {{ consultoria.cliente.company_name }}</h1>
+      <div style="display:flex;gap:8px;">
+        <a href="/studio/{{ consultoria.id }}/plan" class="btn btn--primary btn--sm">Ver Plan Recomendado →</a>
+        <a href="/studio/{{ consultoria.id }}/cotizacion" class="btn btn--outline btn--sm">Cotizar</a>
+      </div>
+    </header>
+    <div class="admin-content">
+
+      {% set madurez = twin.capas.get('madurez', {}) if twin and twin.capas else {} %}
+      {% set madurez_general = madurez.get('general', 0) %}
+      {% set madurez_capas = madurez.get('por_capa', {}) %}
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header">
+          <h3>Madurez Digital General</h3>
+          <span style="font-size:1.5rem;font-weight:700;color:var(--accent-blue);">{{ madurez_general }}%</span>
+        </div>
+        <div class="admin-card__body">
+          {% set capas_info = [
+            ('proposito', 'Proposito'), ('clientes', 'Clientes'), ('servicios', 'Servicios'),
+            ('procesos', 'Procesos'), ('personas', 'Personas'), ('informacion', 'Informacion'),
+            ('tecnologia', 'Tecnologia'), ('inteligencia', 'Inteligencia'),
+            ('gobierno', 'Gobierno'), ('evolucion', 'Evolucion'),
+          ] %}
+          {% for capa_id, label in capas_info %}
+          {% set score = madurez_capas.get(capa_id, 0) %}
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+            <span style="width:100px;font-size:0.8rem;color:var(--text-muted);">{{ label }}</span>
+            <div style="flex:1;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;">
+              <div style="width:{{ score }}%;height:100%;background:{% if score < 30 %}var(--red){% elif score < 60 %}var(--accent-amber){% else %}var(--accent-green){% endif %};border-radius:6px;transition:width 1s;"></div>
+            </div>
+            <span style="width:35px;font-size:0.8rem;font-weight:600;text-align:right;">{{ score }}%</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header">
+          <h3>Resumen Ejecutivo</h3>
+        </div>
+        <div class="admin-card__body">
+          {% set resumen = madurez.get('resumen_ejecutivo', twin.capas.get('resumen_ejecutivo', {})) %}
+          {% if resumen and resumen is mapping %}
+          <p style="font-size:0.95rem;margin-bottom:12px;">{{ resumen.get('perfil_empresa', '') }}</p>
+          {% if resumen.get('hechos_confirmados') %}
+          <h4 style="font-size:0.85rem;color:var(--accent-green);margin-bottom:8px;">Hechos Confirmados</h4>
+          <ul style="margin:0 0 12px 16px;">
+            {% for hecho in resumen.get('hechos_confirmados', []) %}
+            <li style="font-size:0.85rem;margin-bottom:4px;">{{ hecho }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% if resumen.get('oportunidades_detectadas') %}
+          <h4 style="font-size:0.85rem;color:var(--accent-amber);margin-bottom:8px;">Oportunidades Detectadas</h4>
+          <ul style="margin:0 0 12px 16px;">
+            {% for opp in resumen.get('oportunidades_detectadas', []) %}
+            <li style="font-size:0.85rem;margin-bottom:4px;">{{ opp }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      <h3 style="margin-bottom:16px;">Gemelo Digital — Estado Actual (AS IS)</h3>
+      <div class="twin-grid">
+        {% set capas_info = [
+          ('proposito', 'target-arrow', 'Proposito'),
+          ('clientes', 'users', 'Clientes'),
+          ('servicios', 'package', 'Servicios'),
+          ('procesos', 'route', 'Procesos'),
+          ('personas', 'user', 'Personas'),
+          ('informacion', 'database', 'Informacion'),
+          ('tecnologia', 'server', 'Tecnologia'),
+          ('inteligencia', 'chart-bar', 'Inteligencia'),
+          ('gobierno', 'shield-check', 'Gobierno'),
+          ('evolucion', 'trending-up', 'Evolucion'),
+        ] %}
+        {% for capa_id, icono, titulo in capas_info %}
+        {% set contenido = {} %}
+        {% if twin and twin.capas %}
+          {% set contenido = twin.capas.get(capa_id, {}) if capa_id not in ['madurez', 'resumen_ejecutivo'] else {} %}
+        {% endif %}
+        {% set tobe_content = {} %}
+        {% if twin_tobe and twin_tobe.capas %}
+          {% set tobe_content = twin_tobe.capas.get(capa_id, {}) %}
+        {% endif %}
+        {% set score = madurez_capas.get(capa_id, 0) %}
+        <div class="twin-card">
+          <div class="twin-card__header" onclick="toggleCapa('{{ capa_id }}')">
+            <h3><i class="ti ti-{{ icono }}"></i> {{ titulo }}</h3>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="width:60px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;">
+                <div style="width:{{ score }}%;height:100%;background:{% if score < 30 %}#dc2626{% elif score < 60 %}#d97706{% else %}#16a34a{% endif %};border-radius:4px;"></div>
+              </div>
+              <span style="font-size:0.7rem;font-weight:600;">{{ score }}%</span>
+              <i class="ti ti-chevron-right" id="capa-icon-{{ capa_id }}"></i>
+            </div>
+          </div>
+          <div class="twin-card__body" id="capa-content-{{ capa_id }}" style="display:none;">
+            {% if contenido %}
+              {% for key, value in contenido.items() %}
+              <div class="twin-field">
+                <strong>{{ key | replace('_', ' ') | title }}</strong>
+                {% if value is string %}
+                <p>{{ value }}</p>
+                {% elif value is sequence and value is not mapping %}
+                <ul style="margin:4px 0;padding-left:16px;">
+                  {% for item in value %}
+                  <li style="font-size:0.9rem;">{{ item }}</li>
+                  {% endfor %}
+                </ul>
+                {% elif value is mapping %}
+                <pre>{{ value | tojson(indent=2) }}</pre>
+                {% endif %}
+              </div>
+              {% endfor %}
+            {% else %}
+            <p style="color:var(--text-muted);">Sin informacion disponible</p>
+            {% endif %}
+
+            {% if tobe_content %}
+            <hr style="margin:12px 0;border-color:var(--border);">
+            <h4 style="font-size:0.85rem;color:var(--accent-blue);margin-bottom:8px;">Estado Deseado (Propuesto por SRIE)</h4>
+              {% for key, value in tobe_content.items() %}
+              <div class="twin-field">
+                <strong style="color:var(--accent-blue);">{{ key | replace('_', ' ') | title }}</strong>
+                {% if value is string %}
+                <p>{{ value }}</p>
+                {% elif value is sequence and value is not mapping %}
+                <ul style="margin:4px 0;padding-left:16px;">
+                  {% for item in value %}
+                  <li style="font-size:0.9rem;">{{ item }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% set brechas_list = brechas if brechas else [] %}
+      {% if brechas_list %}
+      <div class="admin-card" style="margin-top:24px;">
+        <div class="admin-card__header">
+          <h3>Brechas y Hallazgos</h3>
+          <span class="badge badge--error">{{ brechas_list | length }} brechas</span>
+        </div>
+        <div class="admin-card__body">
+          <table class="admin-table brechas-table">
+            <thead>
+              <tr>
+                <th>Capa</th>
+                <th>Problema</th>
+                <th>Estado Deseado</th>
+                <th>Impacto</th>
+                <th>Origen</th>
+                <th>Solucion</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in brechas_list %}
+              <tr>
+                <td><strong>{{ b.capa }}</strong></td>
+                <td>{{ b.problema_actual[:80] }}</td>
+                <td>{{ b.estado_deseado[:80] }}</td>
+                <td><span class="impacto-{{ b.impacto }}">{{ b.impacto | upper }}</span></td>
+                <td><span class="badge badge--{{ 'success' if b.origen == 'confirmada' else 'warning' }}">{{ b.get('origen', 'estimada') }}</span></td>
+                <td>{{ b.solucion[:60] if b.solucion else '-' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="twin-actions" style="margin-top:24px;">
+        <a href="/studio/{{ consultoria.id }}/plan" class="btn btn--primary">Ver Plan Recomendado</a>
+        <a href="/studio/{{ consultoria.id }}/blueprint-pdf" class="btn btn--outline">Descargar Blueprint PDF</a>
+        <a href="/studio/{{ consultoria.id }}/cotizacion" class="btn btn--outline">Generar Cotizacion</a>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="/static/studio/gemelo.js"></script>
+<script>const CONSULTORIA_ID = '{{ consultoria.id }}';</script>
+{% endblock %}

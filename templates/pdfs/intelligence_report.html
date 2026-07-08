@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 2cm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.6; }
+  .header { text-align: center; border-bottom: 3px solid #0066ff; padding-bottom: 20px; margin-bottom: 30px; }
+  .logo-text { font-size: 28pt; font-weight: 700; color: #0066ff; letter-spacing: -1px; }
+  .subtitle { color: #666; font-size: 10pt; margin-top: 4px; }
+  .badge { display: inline-block; background: linear-gradient(135deg, #0066ff, #00c6ff); color: #fff; padding: 6px 18px; border-radius: 20px; font-size: 9pt; font-weight: 600; margin-top: 10px; letter-spacing: 1px; }
+  h2 { font-size: 14pt; color: #0066ff; margin: 24px 0 10px 0; border-left: 4px solid #0066ff; padding-left: 12px; }
+  h3 { font-size: 12pt; color: #1a1a2e; margin: 16px 0 8px 0; }
+  .info-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  .info-table td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+  .info-table td:first-child { font-weight: 600; color: #555; width: 40%; }
+  .score-box { background: linear-gradient(135deg, #0066ff, #00c6ff); color: #fff; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
+  .score-number { font-size: 36pt; font-weight: 700; }
+  .score-label { font-size: 10pt; opacity: 0.9; margin-top: 4px; }
+  .readiness { font-size: 14pt; font-weight: 600; margin-top: 8px; }
+  .summary { background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 16px 0; border-left: 4px solid #0066ff; font-size: 11pt; }
+  .actions { list-style: none; padding: 0; }
+  .actions li { padding: 8px 0 8px 28px; position: relative; border-bottom: 1px solid #f0f0f0; }
+  .actions li::before { content: "✓"; position: absolute; left: 0; color: #0066ff; font-weight: 700; }
+  .system-rec { background: linear-gradient(135deg, #0066ff, #00c6ff); color: #fff; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
+  .system-rec .tier { font-size: 20pt; font-weight: 700; }
+  .system-rec .tier-desc { font-size: 10pt; opacity: 0.9; margin-top: 4px; }
+  .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee; color: #999; font-size: 9pt; }
+  .footer a { color: #0066ff; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-text">Stonelytics</div>
+    <div class="subtitle">Sistemas Digitales Empresariales</div>
+    <div class="badge">INFORME DE DIAGNÓSTICO</div>
+  </div>
+
+  <h2>Información del Cliente</h2>
+  <table class="info-table">
+    <tr><td>Empresa</td><td>{{ company_name }}</td></tr>
+    <tr><td>Contacto</td><td>{{ contact_name or '—' }}</td></tr>
+    <tr><td>Email</td><td>{{ email or '—' }}</td></tr>
+    <tr><td>Fecha</td><td>{{ generated_at }}</td></tr>
+  </table>
+
+  <div class="score-box">
+    <div class="score-number">{{ diagnosis.score }}/100</div>
+    <div class="score-label">Índice de Madurez Digital</div>
+    <div class="readiness">{{ diagnosis.readiness }}</div>
+  </div>
+
+  <h2>Resumen Ejecutivo</h2>
+  <div class="summary">{{ diagnosis.summary }}</div>
+
+  <h2>Acciones Recomendadas</h2>
+  <ul class="actions">
+    {% for action in diagnosis.actions %}
+    <li>{{ action }}</li>
+    {% endfor %}
+  </ul>
+
+  <div class="system-rec">
+    <div class="tier">Sistema Recomendado: {{ diagnosis.system }}</div>
+    <div class="tier-desc">Stonelytics — Diseñamos, implementamos y administramos tu Sistema Digital</div>
+  </div>
+
+  <div class="footer">
+    <p><strong>Stonelytics</strong> — Sistemas Digitales Empresariales</p>
+    <p><a href="https://stonelytics.tech">stonelytics.tech</a> · <a href="mailto:daviddb@stonelytics.tech">daviddb@stonelytics.tech</a></p>
+    <p>Este informe es generado automáticamente como parte de nuestra evaluación inicial.</p>
+  </div>
+</body>
+</html>

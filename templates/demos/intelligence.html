@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+{% block title %}Demo Intelligence — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/landing.css">{% endblock %}
+
+{% block body %}
+  <nav class="navbar">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo">
+        <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" class="navbar__logo-icon" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
+        <div class="navbar__logo-text">
+          <span class="navbar__brand">Stonelytics</span>
+          <span class="navbar__tagline">INTELIGENCIA DIGITAL</span>
+        </div>
+      </a>
+      <span class="badge badge--green"><i class="ti ti-brain"></i> Demo: Sistema Intelligence</span>
+    </div>
+  </nav>
+
+  <section class="section" style="padding:60px 0;">
+    <div class="container">
+      <div class="section__header">
+        <span class="badge badge--outline"><i class="ti ti-brain"></i> Diagnóstico Inteligente</span>
+        <h2>Tu empresa opera de forma <span class="gradient-text">más inteligente</span></h2>
+        <p class="section__subtitle">Un asistente especializado analiza tu empresa y genera un informe completo con recomendaciones. Sin chat libre — un flujo guiado.</p>
+      </div>
+
+      <!-- FLOW INDICATORS -->
+      <div style="display:flex;justify-content:center;gap:0;margin-bottom:40px;flex-wrap:wrap;">
+        <div class="ai-flow-step active" data-goto="1">
+          <div class="ai-flow-step__num">1</div>
+          <span>Preguntas</span>
+        </div>
+        <div class="ai-flow-step__line"></div>
+        <div class="ai-flow-step" data-goto="2">
+          <div class="ai-flow-step__num">2</div>
+          <span>Análisis</span>
+        </div>
+        <div class="ai-flow-step__line"></div>
+        <div class="ai-flow-step" data-goto="3">
+          <div class="ai-flow-step__num">3</div>
+          <span>Resultado</span>
+        </div>
+        <div class="ai-flow-step__line"></div>
+        <div class="ai-flow-step" data-goto="4">
+          <div class="ai-flow-step__num">4</div>
+          <span>Informe</span>
+        </div>
+      </div>
+
+      <!-- AI CARD -->
+      <div style="max-width:640px;margin:0 auto;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;">
+        <div style="background:var(--bg-dark);padding:20px 32px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <svg viewBox="0 0 32 32" fill="none" style="width:32px;height:32px;">
+              <rect width="32" height="32" rx="8" fill="#D97706"/>
+              <path d="M8 16L12 10L20 18L24 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="24" cy="12" r="2.5" fill="#10B981"/>
+            </svg>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--white);font-size:1.1rem;">Asistente IA</span>
+          </div>
+          <span class="badge badge--live"><span class="pulse"></span> En vivo</span>
+        </div>
+
+        <div style="padding:36px 32px;" id="aiBody">
+          {% for q in questions %}
+          <div class="ai-step" data-step="{{ q.id }}" style="display:{% if loop.first %}block{% else %}none{% endif %};">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:24px;line-height:1.2;">
+              <span style="display:inline-block;background:var(--accent-amber);color:var(--white);width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-size:0.8rem;font-weight:700;margin-right:10px;">{{ q.id }}</span>{{ q.question }}
+            </h2>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              {% for option in q.options %}
+              <div class="ai-option" data-step="{{ q.id }}" data-value="{{ option.value }}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:0.95rem;font-weight:500;">
+                <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;"></div>
+                <span>{{ option.label }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+
+          <!-- ANALYSIS ANIMATION -->
+          <div id="aiAnalysis" style="display:none;text-align:center;padding:40px 0;">
+            <div style="width:64px;height:64px;border-radius:50%;background:rgba(217,119,6,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem;color:var(--accent-amber);animation:pulse 1.5s infinite;"><i class="ti ti-brain"></i></div>
+            <h3 style="margin-bottom:8px;">Analizando tu empresa...</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Procesando respuestas y generando recomendaciones</p>
+            <div style="margin-top:24px;display:flex;flex-direction:column;gap:8px;max-width:300px;margin-left:auto;margin-right:auto;">
+              <div class="analysis-bar" style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;"><div class="analysis-fill" style="width:0;height:100%;background:var(--accent-amber);transition:width 0.8s ease-out;"></div></div>
+              <div class="analysis-bar" style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;"><div class="analysis-fill" style="width:0;height:100%;background:var(--accent-blue);transition:width 0.8s ease-out 0.3s;"></div></div>
+              <div class="analysis-bar" style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;"><div class="analysis-fill" style="width:0;height:100%;background:var(--accent-green);transition:width 0.8s ease-out 0.6s;"></div></div>
+            </div>
+          </div>
+
+          <!-- RESULT -->
+          <div id="aiResult" style="display:none;">
+            <div style="background:var(--bg-light);border-radius:var(--radius);padding:24px;margin-bottom:24px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(217,119,6,0.12);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--accent-amber);"><i class="ti ti-brain"></i></div>
+                <div>
+                  <h4 style="margin:0;">Diagnóstico IA</h4>
+                  <p style="font-size:0.8rem;color:var(--text-muted);margin:0;" id="aiReadiness"></p>
+                </div>
+              </div>
+              <div style="margin-bottom:16px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                  <span style="font-size:0.85rem;font-weight:600;">Madurez Digital</span>
+                  <span style="font-size:0.85rem;font-weight:700;color:var(--accent-blue);" id="aiScore"></span>
+                </div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+                  <div id="aiScoreBar" style="height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-green));border-radius:4px;transition:width 1s ease-out;width:0;"></div>
+                </div>
+              </div>
+              <p style="font-size:0.9rem;" id="aiSummary"></p>
+            </div>
+            <div style="margin-bottom:24px;">
+              <h4 style="margin-bottom:12px;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Recomendaciones</h4>
+              <ul id="aiActions" style="list-style:none;"></ul>
+            </div>
+            <div style="background:var(--bg-dark);border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:20px;">
+              <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:12px;">Sistema recomendado para tu empresa:</p>
+              <h3 style="color:var(--white);font-size:1.5rem;margin-bottom:16px;" id="aiSystem"></h3>
+            </div>
+            <div style="display:flex;gap:12px;">
+              <button onclick="showInforme()" class="btn btn--primary" style="flex:1;">
+                <i class="ti ti-file-text"></i> Ver Informe
+              </button>
+              <a href="/" class="btn btn--outline" style="flex:1;color:var(--text-primary);border-color:var(--border);">
+                <i class="ti ti-home"></i> Volver
+              </a>
+            </div>
+          </div>
+
+          <!-- INFORME PDF SIMULATION -->
+          <div id="aiInforme" style="display:none;">
+            <div style="background:#fff;border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+              <!-- Header -->
+              <div style="background:linear-gradient(135deg,#0F172A,#1E293B);padding:32px;text-align:center;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
+                  <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" style="width:28px;height:28px;border-radius:6px;">
+                  <span style="color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;">Stonelytics</span>
+                </div>
+                <h3 style="color:#fff;font-size:1.3rem;margin-bottom:4px;">Informe de Diagnóstico Digital</h3>
+                <p style="color:#94A3B8;font-size:0.8rem;" id="informeDate"></p>
+              </div>
+              <!-- Body -->
+              <div style="padding:24px;">
+                <div style="margin-bottom:20px;">
+                  <h4 style="color:var(--accent-amber);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Resumen Ejecutivo</h4>
+                  <p style="font-size:0.9rem;color:var(--text-secondary);" id="informeSummary"></p>
+                </div>
+                <div style="margin-bottom:20px;">
+                  <h4 style="color:var(--accent-amber);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Nivel de Madurez</h4>
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+                      <div id="informeBar" style="height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-green));border-radius:4px;width:0;transition:width 1s;"></div>
+                    </div>
+                    <span id="informeScore" style="font-weight:700;font-size:0.9rem;"></span>
+                  </div>
+                </div>
+                <div style="margin-bottom:20px;">
+                  <h4 style="color:var(--accent-amber);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Capacidades Recomendadas</h4>
+                  <ul id="informeActions" style="list-style:none;"></ul>
+                </div>
+                <div style="margin-bottom:20px;">
+                  <h4 style="color:var(--accent-amber);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Sistema Recomendado</h4>
+                  <p style="font-weight:700;font-size:1.1rem;" id="informeSystem"></p>
+                </div>
+                <div style="border-top:1px solid var(--border);padding-top:16px;text-align:center;">
+                  <p style="font-size:0.8rem;color:var(--text-muted);">Informe generado por Stonelytics Intelligence</p>
+                  <p style="font-size:0.75rem;color:var(--text-muted);">stonelytics.tech | daviddb@stonelytics.tech</p>
+                </div>
+              </div>
+            </div>
+            <div id="informeForm" style="display:none;margin-top:16px;padding:16px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);">
+              <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">Personaliza tu informe (opcional):</p>
+              <input type="text" id="informeUserName" placeholder="Tu nombre" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text-primary);margin-bottom:8px;font-size:0.9rem;box-sizing:border-box;">
+              <input type="text" id="informeUserCompany" placeholder="Nombre de tu empresa" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text-primary);margin-bottom:12px;font-size:0.9rem;box-sizing:border-box;">
+              <button onclick="downloadPDF()" class="btn btn--primary" style="width:100%;">
+                <i class="ti ti-download"></i> Descargar con mis datos
+              </button>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:12px;">
+              <button onclick="showInformeForm()" class="btn btn--primary" style="flex:1;">
+                <i class="ti ti-download"></i> Descargar PDF
+              </button>
+              <a href="/" class="btn btn--outline" style="flex:1;color:var(--text-primary);border-color:var(--border);">
+                <i class="ti ti-home"></i> Volver
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:0 32px 32px;" id="aiFooter">
+          <button class="btn btn--primary btn--block" id="aiNext" style="width:100%;">
+            Siguiente <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+  .ai-flow-step { display:flex;flex-direction:column;align-items:center;gap:6px; }
+  .ai-flow-step__num { width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;transition:all 0.3s; }
+  .ai-flow-step.active .ai-flow-step__num { background:var(--accent-amber);color:#fff; }
+  .ai-flow-step.done .ai-flow-step__num { background:var(--accent-green);color:#fff; }
+  .ai-flow-step span { font-size:0.75rem;color:var(--text-muted); }
+  .ai-flow-step.active span { color:var(--accent-amber);font-weight:600; }
+  .ai-flow-step__line { width:40px;height:2px;background:var(--border);margin-top:14px; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.1)} }
+  </style>
+
+  <script>
+  let intelligenceAnswers = [];
+  document.addEventListener('DOMContentLoaded', () => {
+    const totalSteps = document.querySelectorAll('.ai-step').length;
+    let currentStep = 1;
+    const answers = intelligenceAnswers;
+    const nextBtn = document.getElementById('aiNext');
+    const aiFooter = document.getElementById('aiFooter');
+    const flowSteps = document.querySelectorAll('.ai-flow-step');
+
+    function updateFlow(s) {
+      flowSteps.forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i + 1 < s) el.classList.add('done');
+        else if (i + 1 === s) el.classList.add('active');
+      });
+    }
+
+    function updateUI() {
+      document.querySelectorAll('.ai-step').forEach(s => s.style.display = 'none');
+      document.getElementById('aiAnalysis').style.display = 'none';
+      document.getElementById('aiResult').style.display = 'none';
+      document.getElementById('aiInforme').style.display = 'none';
+      aiFooter.style.display = 'block';
+      if (currentStep <= totalSteps) {
+        document.querySelector(`.ai-step[data-step="${currentStep}"]`).style.display = 'block';
+        nextBtn.innerHTML = currentStep === totalSteps ? 'Diagnosticar <i class="ti ti-brain"></i>' : 'Siguiente <i class="ti ti-arrow-right"></i>';
+        const selected = document.querySelector(`.ai-option.selected[data-step="${currentStep}"]`);
+        nextBtn.disabled = !selected;
+        updateFlow(1);
+      } else if (currentStep === totalSteps + 1) {
+        document.getElementById('aiAnalysis').style.display = 'block';
+        aiFooter.style.display = 'none';
+        updateFlow(2);
+        setTimeout(() => {
+          document.querySelectorAll('.analysis-fill').forEach(el => el.style.width = '100%');
+        }, 100);
+        setTimeout(() => {
+          currentStep++;
+          showResult();
+        }, 2500);
+      }
+    }
+
+    function showResult() {
+      document.querySelectorAll('.ai-step, #aiAnalysis').forEach(s => s.style.display = 'none');
+      document.getElementById('aiResult').style.display = 'block';
+      aiFooter.style.display = 'none';
+      updateFlow(3);
+    }
+
+    document.querySelectorAll('.ai-option').forEach(option => {
+      option.addEventListener('click', () => {
+        const step = option.dataset.step;
+        document.querySelectorAll(`.ai-option[data-step="${step}"]`).forEach(o => { o.classList.remove('selected'); o.style.borderColor = 'var(--border)'; o.style.background = 'transparent'; });
+        option.classList.add('selected');
+        option.style.borderColor = 'var(--accent-amber)';
+        option.style.background = 'rgba(217,119,6,0.08)';
+        const existing = answers.findIndex(a => a.step === parseInt(step));
+        const answerData = { step: parseInt(step), value: option.dataset.value };
+        if (existing >= 0) answers[existing] = answerData; else answers.push(answerData);
+        nextBtn.disabled = false;
+      });
+    });
+
+    nextBtn.addEventListener('click', async () => {
+      if (currentStep <= totalSteps) {
+        if (!document.querySelector(`.ai-option.selected[data-step="${currentStep}"]`)) return;
+        currentStep++;
+        updateUI();
+      } else if (currentStep === totalSteps + 1) {
+        nextBtn.disabled = true;
+        try {
+          const res = await fetch('/demo/intelligence/diagnose', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ answers }) });
+          const data = await res.json();
+          if (data.ok) {
+            const d = data.diagnosis;
+            document.getElementById('aiReadiness').textContent = d.readiness;
+            document.getElementById('aiScore').textContent = d.score + '%';
+            document.getElementById('aiSummary').textContent = d.summary;
+            document.getElementById('aiSystem').textContent = 'Sistema ' + d.system;
+            document.getElementById('informeSummary').textContent = d.summary;
+            document.getElementById('informeScore').textContent = d.score + '%';
+            document.getElementById('informeSystem').textContent = 'Sistema ' + d.system;
+            const actionsEl = document.getElementById('aiActions');
+            const informeActionsEl = document.getElementById('informeActions');
+            actionsEl.innerHTML = '';
+            informeActionsEl.innerHTML = '';
+            d.actions.forEach(a => {
+              const li = document.createElement('li');
+              li.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;font-size:0.9rem;color:var(--text-secondary);border-bottom:1px solid var(--border);';
+              li.innerHTML = '<i class="ti ti-check" style="color:var(--accent-green);"></i> ' + a;
+              actionsEl.appendChild(li);
+              const li2 = li.cloneNode(true);
+              informeActionsEl.appendChild(li2);
+            });
+            currentStep++;
+            updateUI();
+            setTimeout(() => { document.getElementById('aiScoreBar').style.width = d.score + '%'; document.getElementById('informeBar').style.width = d.score + '%'; }, 100);
+          }
+        } catch (err) {
+          alert('Error de conexión. Intenta de nuevo.');
+        }
+        nextBtn.disabled = false;
+      }
+    });
+
+    updateUI();
+  });
+
+  function showInforme() {
+    document.getElementById('aiResult').style.display = 'none';
+    document.getElementById('aiInforme').style.display = 'block';
+    document.querySelectorAll('.ai-flow-step').forEach(el => { el.classList.remove('active'); el.classList.add('done'); });
+    const now = new Date();
+    document.getElementById('informeDate').textContent = 'Generado el ' + now.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    setTimeout(() => { document.getElementById('informeBar').style.width = document.getElementById('aiScoreBar').style.width; }, 100);
+  }
+
+  async function downloadPDF() {
+    const name = document.getElementById('informeUserName')?.value || '';
+    const company = document.getElementById('informeUserCompany')?.value || '';
+    try {
+      const res = await fetch('/demo/intelligence/report.pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_name: company || 'Tu Empresa',
+          contact_name: name,
+          email: '',
+          answers: intelligenceAnswers
+        })
+      });
+      if (!res.ok) throw new Error('Error generando PDF');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'informe-diagnostico-stonelytics.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Error al descargar el PDF. Intenta de nuevo.');
+    }
+  }
+
+  function showInformeForm() {
+    document.getElementById('informeForm').style.display = 'block';
+    document.querySelector('#aiInforme .btn--primary[onclick]').style.display = 'none';
+  }
+  </script>
+
+  <a href="/" style="position:fixed;bottom:28px;left:28px;z-index:90;" class="btn btn--primary"><i class="ti ti-arrow-left"></i> Volver</a>
+{% endblock %}

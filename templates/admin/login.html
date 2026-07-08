@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Admin — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-login">
+  <div class="admin-login__bg">
+    <div class="admin-login__shape admin-login__shape--1"></div>
+    <div class="admin-login__shape admin-login__shape--2"></div>
+    <div class="admin-login__shape admin-login__shape--3"></div>
+  </div>
+  <div class="admin-login__card">
+    <div class="admin-login__hero">
+      <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" class="admin-login__logo">
+      <h2>Panel Administrativo</h2>
+      <p>Administra clientes, proyectos y despliegues desde Stonelytics OS</p>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="admin-login__alert admin-login__alert--error">
+      <i class="ti ti-alert-circle"></i> {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="form-group">
+        <label for="email"><i class="ti ti-mail"></i> Email</label>
+        <input type="email" id="email" name="email" required placeholder="tu@email.com">
+      </div>
+      <div class="form-group">
+        <label for="password"><i class="ti ti-lock"></i> Contraseña</label>
+        <input type="password" id="password" name="password" required placeholder="••••••••">
+      </div>
+      <div class="admin-login__options">
+        <label class="admin-login__checkbox">
+          <input type="checkbox" name="remember"> Mantener sesión
+        </label>
+        <a href="#" class="admin-login__forgot" onclick="return false">¿Olvidaste tu contraseña?</a>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block btn--lg" style="margin-top:16px;">
+        <i class="ti ti-login"></i> Iniciar sesión
+      </button>
+    </form>
+    <div class="admin-login__footer">
+      <div class="admin-login__meta">
+        <span><i class="ti ti-shield-check"></i> SSL Seguro</span>
+        <span><i class="ti ti-code"></i> v0.2.0</span>
+        <span><i class="ti ti-server"></i> Producción</span>
+      </div>
+      <a href="/"><i class="ti ti-arrow-left"></i> Volver al sitio</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Studio — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Studio — Consultorías</h1>
+      <a href="/studio/nueva" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i> Nueva Consultoría</a>
+    </header>
+    <div class="admin-content">
+      <div class="admin-stats">
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(37,99,235,0.1);color:var(--accent-blue);"><i class="ti ti-folder"></i></div>
+          <div><span class="admin-stat__value">{{ stats.total }}</span><span class="admin-stat__label">Total</span></div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ti ti-message-chatbot"></i></div>
+          <div><span class="admin-stat__value">{{ stats.activas }}</span><span class="admin-stat__label">En entrevista</span></div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(217,119,6,0.1);color:var(--accent-amber);"><i class="ti ti-file-text"></i></div>
+          <div><span class="admin-stat__value">{{ stats.completadas }}</span><span class="admin-stat__label">Completadas</span></div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat__icon" style="background:rgba(99,102,241,0.1);color:var(--accent-indigo);"><i class="ti ti-clock"></i></div>
+          <div><span class="admin-stat__value">{{ stats.borradores }}</span><span class="admin-stat__label">Borrador</span></div>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card__header"><h3>Consultorías</h3></div>
+        <div class="admin-card__body">
+          <table class="admin-table">
+            <thead><tr><th>Cliente</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+            <tbody>
+              {% for c in consultorias %}
+              <tr>
+                <td><strong>{{ c.cliente.company_name }}</strong><br><small style="color:var(--text-muted)">{{ c.cliente.contact_name }}</small></td>
+                <td><span class="badge badge--{{ 'success' if c.estado == 'completada' else 'warning' if c.estado == 'activa' else 'outline' }}">{{ c.estado }}</span></td>
+                <td>{{ c.created_at.strftime('%d/%m/%Y') if c.created_at else '—' }}</td>
+                <td>
+                  <a href="/studio/{{ c.id }}/entrevista" class="btn btn--sm btn--outline">Entrevista</a>
+                  <a href="/studio/{{ c.id }}/gemelo-asis" class="btn btn--sm btn--outline">Gemelo</a>
+                  <a href="/studio/{{ c.id }}/propuesta" class="btn btn--sm btn--outline">Propuesta</a>
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted);">No hay consultorías aún. <a href="/studio/nueva">Crear la primera</a></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

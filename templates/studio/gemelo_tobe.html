@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Gemelo TO BE — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Gemelo Digital — Estado Deseado (TO BE)</h1>
+      <div style="display:flex;gap:8px;">
+        <a href="/studio/{{ consultoria.id }}/gemelo-asis" class="btn btn--outline btn--sm">← Volver al AS IS</a>
+        <button class="btn btn--primary btn--sm" onclick="calcularBrechas()">Calcular Brechas</button>
+      </div>
+    </header>
+    <div class="admin-content">
+      <div class="twin-grid">
+        {% set capas_info = [
+          ('proposito', 'target-arrow', 'Propósito'),
+          ('clientes', 'users', 'Clientes'),
+          ('servicios', 'package', 'Servicios'),
+          ('procesos', 'route', 'Procesos'),
+          ('personas', 'user', 'Personas'),
+          ('informacion', 'database', 'Información'),
+          ('tecnologia', 'server', 'Tecnología'),
+          ('inteligencia', 'chart-bar', 'Inteligencia'),
+          ('gobierno', 'shield-check', 'Gobierno'),
+          ('evolucion', 'trending-up', 'Evolución'),
+        ] %}
+        {% for capa_id, icono, titulo in capas_info %}
+        {% set contenido_asis = twin_asis.capas.get(capa_id, {}) if twin_asis and twin_asis.capas else {} %}
+        {% set contenido_tobe = twin_tobe.capas.get(capa_id, {}) if twin_tobe and twin_tobe.capas else {} %}
+        <div class="twin-card">
+          <div class="twin-card__header" onclick="toggleCapa('{{ capa_id }}')">
+            <h3><i class="ti ti-{{ icono }}"></i> {{ titulo }}</h3>
+            <i class="ti ti-chevron-right" id="capa-icon-{{ capa_id }}"></i>
+          </div>
+          <div class="twin-card__body" id="capa-content-{{ capa_id }}" style="display:none;">
+            <h4 style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;">Estado Actual</h4>
+            <input type="hidden" id="capa-json-{{ capa_id }}" value='{{ contenido_asis | tojson | safe }}'>
+            {% for key, value in contenido_asis.items() %}
+            <div class="twin-field">
+              <strong>{{ key | replace('_', ' ') | title }}</strong>
+              <p>{{ value if value is string else value | tojson }}</p>
+            </div>
+            {% endfor %}
+
+            <hr style="margin:16px 0;border-color:var(--border);">
+
+            <h4 style="font-size:0.9rem;color:var(--accent-blue);margin-bottom:8px;">Estado Deseado</h4>
+            <textarea class="tobe-editor" id="tobe-{{ capa_id }}" rows="4" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:0.9rem;">{{ contenido_tobe.get('objetivo', '') }}</textarea>
+            <div style="margin-top:8px;display:flex;gap:8px;">
+              <button class="btn btn--sm btn--outline" onclick="sugerirTobe('{{ capa_id }}')" id="sugerir-{{ capa_id }}">Sugerir con IA</button>
+            </div>
+            <div id="objetivos-{{ capa_id }}" style="margin-top:8px;"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="twin-actions">
+        <button class="btn btn--primary" onclick="guardarTobe()" style="margin-right:8px;">Guardar Estado Deseado</button>
+        <button class="btn btn--primary" onclick="calcularBrechas()">Calcular Brechas</button>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="/static/studio/gemelo.js"></script>
+<script>
+const CONSULTORIA_ID = '{{ consultoria.id }}';
+
+async function guardarTobe() {
+    const capas = {};
+    document.querySelectorAll('.tobe-editor').forEach(el => {
+        const capaId = el.id.replace('tobe-', '');
+        if (el.value.trim()) {
+            capas[capaId] = { objetivo: el.value.trim() };
+        }
+    });
+    
+    const resp = await fetch(`/studio/api/${CONSULTORIA_ID}/gemelo-tobe`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ capas }),
+    });
+    const data = await resp.json();
+    if (data.ok) {
+        alert('Estado deseado guardado correctamente');
+    } else {
+        alert('Error: ' + data.error);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Plan — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Plan Recomendado por SRIE</h1>
+      <div style="display:flex;gap:8px;">
+        <form method="POST" action="/studio/{{ consultoria.id }}/cotizacion" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn--primary btn--sm">Generar Cotizacion →</button>
+        </form>
+      </div>
+    </header>
+    <div class="admin-content">
+
+      {% if twin_tobe and twin_tobe.capas %}
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header">
+          <h3>Vision TO BE Propuesta por SRIE</h3>
+        </div>
+        <div class="admin-card__body">
+          <div class="plan-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));">
+            {% set capas_nombre = {'proposito':'Proposito','clientes':'Clientes','servicios':'Servicios','procesos':'Procesos','personas':'Personas','informacion':'Informacion','tecnologia':'Tecnologia','inteligencia':'Inteligencia','gobierno':'Gobierno','evolucion':'Evolucion'} %}
+            {% for capa_id, nombre in capas_nombre.items() %}
+            {% set c = twin_tobe.capas.get(capa_id, {}) %}
+            {% if c %}
+            <div class="plan-card" style="padding:16px;">
+              <h4 style="font-size:0.9rem;margin-bottom:6px;">{{ nombre }}</h4>
+              {% for key, value in c.items() %}
+              <div style="font-size:0.8rem;margin-bottom:4px;">
+                <strong>{{ key | replace('_', ' ') | title }}:</strong>
+                <span style="color:#475569;">{{ value if value is string else (value | join(', ') if value is iterable and value is not mapping else '') }}</span>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if brechas %}
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header">
+          <h3>Brechas que Justifican el Plan</h3>
+          <span class="badge badge--error">{{ brechas | length }} brechas</span>
+        </div>
+        <div class="admin-card__body">
+          <table class="admin-table">
+            <thead><tr><th>Capa</th><th>Brecha Actual</th><th>Impacto</th><th>Solucion Propuesta</th></tr></thead>
+            <tbody>
+              {% for b in brechas %}
+              <tr>
+                <td><strong>{{ b.capa }}</strong></td>
+                <td>{{ b.problema_actual[:80] }}</td>
+                <td><span class="impacto-{{ b.impacto }}">{{ b.impacto | upper }}</span></td>
+                <td>{{ b.solucion[:60] if b.solucion else '—' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if plan and plan.items %}
+      <h3 style="margin-bottom:16px;">Modulos Recomendados</h3>
+      <div class="plan-grid">
+        {% for item in plan.items %}
+        {% set prioridad = item.get('prioridad', 5) %}
+        <div class="plan-card" style="border-left:4px solid {% if prioridad <= 2 %}#dc2626{% elif prioridad <= 4 %}#d97706{% else %}#16a34a{% endif %};">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <h3 style="margin:0;font-size:1rem;"><i class="ti ti-package"></i> {{ item.get('modulo', item.get('description', 'Modulo')) }}</h3>
+            <span class="badge badge--{{ 'error' if prioridad <= 2 else 'warning' if prioridad <= 4 else 'success' }}">Prioridad {{ prioridad }}</span>
+          </div>
+          <p style="font-size:0.9rem;color:#475569;">{{ item.get('descripcion', item.get('justificacion', '')) }}</p>
+          <div class="plan-price">${{ '{:,.2f}'.format(item.get('precio', item.get('valor_estimado', 0))) }}</div>
+          {% if item.get('justificacion') %}
+          <div class="plan-justification" style="margin-top:8px;font-size:0.8rem;">{{ item.justificacion }}</div>
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="admin-card">
+          <div class="admin-card__body" style="text-align:center;padding:60px;">
+            <p style="color:var(--text-muted);">No hay modulos recomendados en el plan generado.</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="admin-card" style="margin-top:20px;">
+        <div class="admin-card__body">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <span style="font-size:0.9rem;color:var(--text-muted);">Inversion Total Estimada</span>
+              <div class="plan-total" style="margin:0;padding:0;border:none;font-size:1.8rem;">${{ '{:,.2f}'.format(plan.total_estimado) }}</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:0.9rem;color:var(--text-muted);">Tiempo Estimado</span>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--accent-blue);">{{ plan.get('duracion_estimada', plan.duracion_estimada) if plan is mapping else plan.duracion_estimada or 'Por definir' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+      <div class="admin-card">
+        <div class="admin-card__body" style="text-align:center;padding:60px;">
+          <i class="ti ti-sparkles" style="font-size:2rem;color:var(--text-muted);"></i>
+          <p style="color:var(--text-muted);margin-top:16px;">No hay un plan generado aun. Primero genera el Blueprint desde la entrevista.</p>
+          <a href="/studio/{{ consultoria.id }}/gemelo-asis" class="btn btn--primary">Ver Blueprint</a>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="twin-actions" style="margin-top:24px;">
+        <a href="/studio/{{ consultoria.id }}/gemelo-asis" class="btn btn--outline">← Volver al Blueprint</a>
+        <form method="POST" action="/studio/{{ consultoria.id }}/cotizacion" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn--primary">Generar Cotizacion</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

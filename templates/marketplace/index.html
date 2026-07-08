@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Marketplace — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'marketplace' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Marketplace</h1>
+      <span style="color:var(--text-muted);font-size:0.9rem;">{{ total_items }} items disponibles</span>
+    </header>
+    <div class="admin-content">
+
+      <h3 style="margin-bottom:16px;">Industry Packs</h3>
+      <div class="plan-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+        {% for ind in industries %}
+        <div class="plan-card" style="cursor:pointer;" onclick="location.href='/marketplace/industria/{{ ind.id }}'">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <h3 style="margin:0;"><i class="ti ti-{{ ind.icono }}"></i> {{ ind.nombre }}</h3>
+            <span class="badge badge--success" style="font-size:0.65rem;">PACK</span>
+          </div>
+          <p style="font-size:0.9rem;color:#475569;">{{ ind.descripcion }}</p>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">
+            Preguntas especializadas · KPIs del sector · Soluciones recomendadas
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <h3 style="margin:32px 0 16px;">Plugins Stonelytics</h3>
+      <div class="plan-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+        {% for plugin in plugins %}
+        <div class="plan-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <h3 style="margin:0;font-size:1rem;"><i class="ti ti-puzzle"></i> {{ plugin.modulo }}</h3>
+            <span class="badge badge--outline" style="font-size:0.65rem;">PLUGIN</span>
+          </div>
+          <p style="font-size:0.9rem;color:#475569;">{{ plugin.descripcion }}</p>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">
+            <span class="badge badge--info">{{ plugin.slug }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

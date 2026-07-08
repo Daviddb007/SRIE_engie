@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Mi Diagnostico — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar__brand">
+      <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" style="width:32px;height:32px;object-fit:contain;border-radius:8px;">
+      <span>Mi Empresa</span>
+    </div>
+    <nav class="admin-sidebar__nav">
+      <a href="/portal/dashboard" class="active"><i class="ti ti-dashboard"></i> Diagnostico</a>
+      <a href="/portal/progreso"><i class="ti ti-trending-up"></i> Progreso</a>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <a href="/portal/logout"><i class="ti ti-logout"></i> Cerrar sesion</a>
+    </div>
+  </aside>
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Diagnostico Empresarial — {{ consultoria.cliente.company_name }}</h1>
+    </header>
+    <div class="admin-content">
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header">
+          <h3>Estado de tu Proyecto</h3>
+        </div>
+        <div class="admin-card__body">
+          <p><strong>Estado:</strong> <span class="badge badge--{{ 'success' if consultoria.estado == 'completada' else 'warning' }}">{{ consultoria.estado }}</span></p>
+          <p><strong>Contacto:</strong> {{ consultoria.cliente.contact_name }} — {{ consultoria.cliente.contact_email }}</p>
+          <p><strong>Inicio:</strong> {{ consultoria.created_at.strftime('%d/%m/%Y') if consultoria.created_at else '—' }}</p>
+        </div>
+      </div>
+
+      {% set madurez = twin_asis.capas.get('madurez', {}) if twin_asis and twin_asis.capas else {} %}
+      {% if madurez %}
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header"><h3>Madurez Digital</h3><span style="font-size:1.5rem;font-weight:700;color:var(--accent-blue);">{{ madurez.get('general', 0) }}%</span></div>
+        <div class="admin-card__body">
+          {% set caps = {'proposito':'Proposito','clientes':'Clientes','servicios':'Servicios','procesos':'Procesos','personas':'Personas','informacion':'Informacion','tecnologia':'Tecnologia','inteligencia':'Inteligencia','gobierno':'Gobierno','evolucion':'Evolucion'} %}
+          {% for cid, cl in caps.items() %}
+          {% set sc = madurez.get('por_capa', {}).get(cid, 0) %}
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+            <span style="width:90px;font-size:0.8rem;color:var(--text-muted);">{{ cl }}</span>
+            <div style="flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;">
+              <div style="width:{{ sc }}%;height:100%;background:{% if sc < 30 %}#dc2626{% elif sc < 60 %}#d97706{% else %}#16a34a{% endif %};border-radius:4px;"></div>
+            </div>
+            <span style="width:30px;font-size:0.75rem;text-align:right;">{{ sc }}%</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if brechas %}
+      <div class="admin-card">
+        <div class="admin-card__header"><h3>Oportunidades de Mejora</h3></div>
+        <div class="admin-card__body">
+          <table class="admin-table">
+            <thead><tr><th>Area</th><th>Oportunidad</th><th>Impacto</th></tr></thead>
+            <tbody>
+              {% for b in brechas %}
+              <tr><td><strong>{{ b.capa }}</strong></td><td>{{ b.problema_actual[:80] }}</td><td><span class="impacto-{{ b.impacto }}">{{ b.impacto | upper }}</span></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

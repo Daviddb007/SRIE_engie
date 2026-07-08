@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} — Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'projects' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>{{ project.name }}</h1>
+      <div style="display:flex;gap:8px;">
+        <span class="badge badge--outline">{{ project.system_type }} — {{ project.status }}</span>
+        <a href="/admin/projects/{{ project.id }}/edit" class="btn btn--outline btn--sm" style="border-color:var(--border);color:var(--text-primary);"><i class="ti ti-edit"></i> Editar</a>
+      </div>
+    </header>
+    <div class="admin-content">
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Información</h3></div>
+          <div class="admin-card__body" style="padding:24px;">
+            <p><strong>Cliente:</strong> {{ project.client.company_name }}</p>
+            <p><strong>Sistema:</strong> {{ project.system_type }}</p>
+            <p><strong>Estado:</strong> {{ project.status }}</p>
+            <p><strong>Dominio:</strong> {{ project.domain or '—' }}</p>
+            <p><strong>Hosting:</strong> {{ project.hosting_provider or '—' }}</p>
+            <p><strong>Fecha de lanzamiento:</strong> {{ project.launch_date or '—' }}</p>
+            {% if project.description %}<p style="margin-top:12px;"><strong>Descripción:</strong> {{ project.description }}</p>{% endif %}
+            {% if project.notes %}<p style="margin-top:12px;"><strong>Notas:</strong> {{ project.notes }}</p>{% endif %}
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Capacidades</h3>
+            <form method="POST" action="/admin/projects/{{ project.id }}/add-capability" style="display:flex;gap:8px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <select name="capability_id" required style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.85rem;background:var(--bg);color:var(--text-primary);">
+                <option value="">Agregar capacidad...</option>
+                {% for c in capabilities %}
+                <option value="{{ c.id }}">{{ c.name }} (${{ '{:,.0f}'.format(c.base_price) }})</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i></button>
+            </form>
+          </div>
+          <div class="admin-card__body">
+            {% for pc in project.capabilities %}
+            <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <strong>{{ pc.capability.name }}</strong>
+                <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">{{ pc.capability.category or '' }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="font-size:0.85rem;">${{ '{:,.2f}'.format(pc.price or pc.capability.base_price) }}</span>
+                <form method="POST" action="/admin/projects/{{ project.id }}/remove-capability/{{ pc.id }}" onsubmit="return confirm('Remover esta capacidad?')">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;"><i class="ti ti-trash"></i></button>
+                </form>
+              </div>
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);text-align:center;padding:24px;">No hay capacidades instaladas</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-grid" style="margin-top:24px;">
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Automatizaciones</h3>
+            <form method="POST" action="/admin/projects/{{ project.id }}/add-automation" style="display:flex;gap:8px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <select name="automation_id" required style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.85rem;background:var(--bg);color:var(--text-primary);">
+                <option value="">Agregar automatización...</option>
+                {% for a in automations %}
+                <option value="{{ a.id }}">{{ a.name }} (${{ '{:,.0f}'.format(a.base_price) }})</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i></button>
+            </form>
+          </div>
+          <div class="admin-card__body">
+            {% for pa in project.automations %}
+            <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <strong>{{ pa.automation.name }}</strong>
+                <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">{{ pa.automation.trigger_type }} → {{ pa.automation.action_type }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="font-size:0.85rem;">${{ '{:,.2f}'.format(pa.price or pa.automation.base_price) }}</span>
+                <form method="POST" action="/admin/projects/{{ project.id }}/remove-automation/{{ pa.id }}" onsubmit="return confirm('Remover esta automatización?')">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;"><i class="ti ti-trash"></i></button>
+                </form>
+              </div>
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);text-align:center;padding:24px;">No hay automatizaciones</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Servicios</h3>
+            <form method="POST" action="/admin/projects/{{ project.id }}/add-service" style="display:flex;gap:8px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <select name="service_id" required style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.85rem;background:var(--bg);color:var(--text-primary);">
+                <option value="">Agregar servicio...</option>
+                {% for s in services %}
+                <option value="{{ s.id }}">{{ s.name }} (${{ '{:,.0f}'.format(s.base_price) }}{{ '/mes' if s.is_recurring else '' }})</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i></button>
+            </form>
+          </div>
+          <div class="admin-card__body">
+            {% for ps in project.services %}
+            <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <strong>{{ ps.service.name }}</strong>
+                <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">{{ ps.service.category or '' }}{% if ps.service.is_recurring %} · {{ ps.service.billing_interval }}{% endif %}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="font-size:0.85rem;">${{ '{:,.2f}'.format(ps.price or ps.service.base_price) }}</span>
+                <form method="POST" action="/admin/projects/{{ project.id }}/remove-service/{{ ps.id }}" onsubmit="return confirm('Remover este servicio?')">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;"><i class="ti ti-trash"></i></button>
+                </form>
+              </div>
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);text-align:center;padding:24px;">No hay servicios</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

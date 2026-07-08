@@ -1,0 +1,22 @@
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__brand">
+        <img src="/static/img/Stonelytics_logo.jpeg" alt="Stonelytics" style="width:32px;height:32px;object-fit:contain;border-radius:8px;">
+        <span>Stonelytics</span>
+      </div>
+      <nav class="admin-sidebar__nav">
+        <a href="/admin/" {{ 'class="active"' if active_page == 'dashboard' }}><i class="ti ti-dashboard"></i> Dashboard</a>
+        <a href="/admin/clients" {{ 'class="active"' if active_page == 'clients' }}><i class="ti ti-building"></i> Clientes</a>
+        <a href="/admin/projects" {{ 'class="active"' if active_page == 'projects' }}><i class="ti ti-folder"></i> Proyectos</a>
+        <a href="/admin/quotations" {{ 'class="active"' if active_page == 'quotations' }}><i class="ti ti-file-text"></i> Cotizaciones</a>
+        <a href="/admin/catalog" {{ 'class="active"' if active_page == 'catalog' }}><i class="ti ti-package"></i> Catálogo</a>
+        <a href="/studio/" {{ 'class="active"' if active_page == 'studio' }}><i class="ti ti-message-chatbot"></i> Studio</a>
+        <a href="/marketplace/" {{ 'class="active"' if active_page == 'marketplace' }}><i class="ti ti-packages"></i> Marketplace</a>
+        <a href="/teams/" {{ 'class="active"' if active_page == 'teams' }}><i class="ti ti-users"></i> Equipos</a>
+        <a href="/analytics/" {{ 'class="active"' if active_page == 'analytics' }}><i class="ti ti-chart-bar"></i> Analytics</a>
+        <a href="/cotizador/"><i class="ti ti-calculator"></i> Cotizador</a>
+      </nav>
+      <div class="admin-sidebar__footer">
+        <a href="/admin/logout"><i class="ti ti-logout"></i> Cerrar sesión</a>
+        <a href="/"><i class="ti ti-home"></i> Ver sitio</a>
+      </div>
+    </aside>

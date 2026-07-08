@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if client else 'Nuevo' }} Cliente — Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'clients' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>{{ 'Editar' if client else 'Nuevo' }} Cliente</h1>
+    </header>
+    <div class="admin-content">
+      <form class="admin-form" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+          <label for="company_name">Empresa *</label>
+          <input type="text" id="company_name" name="company_name" required value="{{ client.company_name if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="contact_name">Nombre del contacto *</label>
+          <input type="text" id="contact_name" name="contact_name" required value="{{ client.contact_name if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="contact_email">Email *</label>
+          <input type="email" id="contact_email" name="contact_email" required value="{{ client.contact_email if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="contact_phone">Teléfono</label>
+          <input type="text" id="contact_phone" name="contact_phone" value="{{ client.contact_phone if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="contact_whatsapp">WhatsApp</label>
+          <input type="text" id="contact_whatsapp" name="contact_whatsapp" value="{{ client.contact_whatsapp if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="industry">Industria</label>
+          <input type="text" id="industry" name="industry" value="{{ client.industry if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="city">Ciudad</label>
+          <input type="text" id="city" name="city" value="{{ client.city if client else '' }}">
+        </div>
+        <div class="form-group">
+          <label for="country">País</label>
+          <input type="text" id="country" name="country" value="{{ client.country if client else 'Colombia' }}">
+        </div>
+        <div class="form-group">
+          <label for="notes">Notas</label>
+          <textarea id="notes" name="notes" rows="3">{{ client.notes if client else '' }}</textarea>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button type="submit" class="btn btn--primary btn--lg">{{ 'Guardar cambios' if client else 'Crear cliente' }}</button>
+          <a href="/admin/clients" class="btn btn--outline btn--lg" style="border-color:var(--border);color:var(--text-primary);">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Cotizaciones — Admin Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'quotations' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Cotizaciones</h1>
+      <a href="/cotizador/" class="btn btn--primary"><i class="ti ti-plus"></i> Nueva cotización</a>
+    </header>
+    <div class="admin-content">
+      <div class="admin-card">
+        <table class="admin-table">
+          <thead><tr><th>Número</th><th>Cliente</th><th>Título</th><th>Total</th><th>Estado</th><th>Creada</th></tr></thead>
+          <tbody>
+            {% for q in quotations %}
+            <tr>
+              <td><a href="/admin/quotations/{{ q.id }}" style="color:var(--accent-blue);text-decoration:none;font-weight:600;">{{ q.quotation_number }}</a></td>
+              <td>{{ q.client.company_name }}</td>
+              <td>{{ q.title }}</td>
+              <td>${{ '{:,.2f}'.format(q.final_price) }}</td>
+              <td><span class="badge badge--outline">{{ q.status }}</span></td>
+              <td>{{ q.created_at.strftime('%d/%m/%Y') }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px;">No hay cotizaciones</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

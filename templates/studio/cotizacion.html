@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Cotización — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Cotización</h1>
+    </header>
+    <div class="admin-content">
+      <form method="POST" class="admin-form" style="max-width:700px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h3 style="margin-bottom:20px;">Plan Recomendado para {{ consultoria.cliente.company_name }}</h3>
+        
+        <div class="form-group">
+          <label>Título de la propuesta</label>
+          <input type="text" name="title" value="Plan Empresarial - {{ consultoria.cliente.company_name }}" required style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:6px;">
+        </div>
+
+        <div class="form-group">
+          <label>Items del Plan</label>
+          <div id="items-container">
+            {% for item in plan.get('items', []) %}
+            <div class="item-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:12px;background:#f8fafc;border-radius:6px;">
+              <div style="flex:1;">
+                <strong>{{ item.modulo }}</strong>
+                <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">{{ item.descripcion }}</p>
+              </div>
+              <input type="hidden" name="description" value="{{ item.modulo }}: {{ item.descripcion }}" data-index="{{ loop.index0 }}">
+              <input type="number" name="unit_price" value="{{ item.precio }}" data-index="{{ loop.index0 }}" style="width:120px;padding:8px;border:1.5px solid var(--border);border-radius:6px;">
+              <input type="number" name="quantity" value="1" min="1" data-index="{{ loop.index0 }}" style="width:60px;padding:8px;border:1.5px solid var(--border);border-radius:6px;">
+              <input type="checkbox" checked onchange="this.closest('.item-row').style.opacity=this.checked?'1':'0.5'">
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);">No hay items en el plan.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Alcance del proyecto</label>
+          <textarea name="scope" rows="4" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;">Implementación del plan empresarial para {{ consultoria.cliente.company_name }} incluyendo los módulos seleccionados.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Descuento (%)</label>
+          <input type="number" name="discount_pct" value="0" min="0" max="100" step="5" style="width:120px;padding:12px;border:1.5px solid var(--border);border-radius:6px;">
+        </div>
+
+        <input type="hidden" name="items" id="items-json">
+
+        <button type="submit" class="btn btn--primary" style="width:100%;padding:14px;margin-top:16px;">Guardar y Generar Propuesta</button>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const items = [];
+    document.querySelectorAll('.item-row').forEach(row => {
+        if (row.querySelector('input[type="checkbox"]').checked) {
+            const description = row.querySelector('[name="description"]').value;
+            const price = parseFloat(row.querySelector('[name="unit_price"]').value) || 0;
+            const qty = parseInt(row.querySelector('[name="quantity"]').value) || 1;
+            items.push({
+                item_type: 'custom',
+                description: description,
+                unit_price: price,
+                quantity: qty,
+            });
+        }
+    });
+    document.getElementById('items-json').value = JSON.stringify(items);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Catálogo — Admin Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'catalog' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Catálogo</h1>
+    </header>
+    <div class="admin-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3>Capacidades</h3>
+        <a href="/admin/catalog/capability/new" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i> Nueva</a>
+      </div>
+      <div class="admin-card" style="margin-bottom:32px;">
+        <table class="admin-table">
+          <thead><tr><th>Nombre</th><th>Categoría</th><th>Precio base</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            {% for c in capabilities %}
+            <tr>
+              <td><strong>{{ c.name }}</strong></td>
+              <td>{{ c.category or '—' }}</td>
+              <td>${{ '{:,.2f}'.format(c.base_price) }}</td>
+              <td>{% if c.is_active_ %}<span style="color:var(--accent-green);">Activo</span>{% else %}<span style="color:var(--red);">Inactivo</span>{% endif %}</td>
+              <td><a href="/admin/catalog/capability/{{ c.id }}/edit" style="color:var(--accent-blue);font-size:0.85rem;">Editar</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3>Automatizaciones</h3>
+        <a href="/admin/catalog/automation/new" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i> Nueva</a>
+      </div>
+      <div class="admin-card" style="margin-bottom:32px;">
+        <table class="admin-table">
+          <thead><tr><th>Nombre</th><th>Trigger</th><th>Acción</th><th>Precio</th><th></th></tr></thead>
+          <tbody>
+            {% for a in automations %}
+            <tr>
+              <td><strong>{{ a.name }}</strong></td>
+              <td>{{ a.trigger_type }}</td>
+              <td>{{ a.action_type }}</td>
+              <td>${{ '{:,.2f}'.format(a.base_price) }}</td>
+              <td><a href="/admin/catalog/automation/{{ a.id }}/edit" style="color:var(--accent-blue);font-size:0.85rem;">Editar</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3>Servicios</h3>
+        <a href="/admin/catalog/service/new" class="btn btn--primary btn--sm"><i class="ti ti-plus"></i> Nuevo</a>
+      </div>
+      <div class="admin-card">
+        <table class="admin-table">
+          <thead><tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Recurrente</th><th></th></tr></thead>
+          <tbody>
+            {% for s in services %}
+            <tr>
+              <td><strong>{{ s.name }}</strong></td>
+              <td>{{ s.category or '—' }}</td>
+              <td>${{ '{:,.2f}'.format(s.base_price) }}</td>
+              <td>{% if s.is_recurring %}{{ s.billing_interval }}{% else %}Único{% endif %}</td>
+              <td><a href="/admin/catalog/service/{{ s.id }}/edit" style="color:var(--accent-blue);font-size:0.85rem;">Editar</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

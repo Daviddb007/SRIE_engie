@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ client.company_name }} — Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'clients' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>{{ client.company_name }}</h1>
+      <a href="/admin/clients/{{ client.id }}/edit" class="btn btn--primary"><i class="ti ti-edit"></i> Editar</a>
+    </header>
+    <div class="admin-content">
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Información del cliente</h3></div>
+          <div class="admin-card__body" style="padding:24px;">
+            <p><strong>Contacto:</strong> {{ client.contact_name }}</p>
+            <p><strong>Email:</strong> {{ client.contact_email }}</p>
+            <p><strong>Teléfono:</strong> {{ client.contact_phone or '—' }}</p>
+            <p><strong>WhatsApp:</strong> {{ client.contact_whatsapp or '—' }}</p>
+            <p><strong>Industria:</strong> {{ client.industry or '—' }}</p>
+            <p><strong>Ciudad:</strong> {{ client.city or '—' }}</p>
+            <p><strong>País:</strong> {{ client.country }}</p>
+            {% if client.notes %}<p style="margin-top:12px;"><strong>Notas:</strong> {{ client.notes }}</p>{% endif %}
+          </div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Proyectos</h3>
+          </div>
+          <div class="admin-card__body">
+            {% for project in projects %}
+            <div style="padding:12px 0;border-bottom:1px solid var(--border);">
+              <a href="/admin/projects/{{ project.id }}" style="color:var(--accent-blue);text-decoration:none;font-weight:600;">{{ project.name }}</a>
+              <span class="badge badge--outline" style="margin-left:8px;">{{ project.system_type }}</span>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">{{ project.status }}</p>
+            </div>
+            {% else %}
+            <p style="color:var(--text-muted);text-align:center;padding:24px;">No hay proyectos</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

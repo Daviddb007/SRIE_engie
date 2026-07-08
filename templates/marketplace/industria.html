@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}{{ pack.nombre }} — Marketplace{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'marketplace' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1><i class="ti ti-{{ pack.icono }}"></i> {{ pack.nombre }}</h1>
+      <a href="/marketplace/" class="btn btn--outline btn--sm">← Volver</a>
+    </header>
+    <div class="admin-content">
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header"><h3>Acerca de este Industry Pack</h3></div>
+        <div class="admin-card__body">
+          <p style="font-size:0.95rem;">{{ pack.descripcion }}</p>
+        </div>
+      </div>
+
+      <div class="admin-grid" style="margin-bottom:20px;">
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Preguntas Clave</h3></div>
+          <div class="admin-card__body">
+            <ul style="margin:0;padding-left:16px;">
+              {% for p in pack.preguntas_clave %}
+              <li style="margin-bottom:8px;font-size:0.9rem;">{{ p }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>KPIs del Sector</h3></div>
+          <div class="admin-card__body">
+            <ul style="margin:0;padding-left:16px;">
+              {% for kpi in pack.kpi_industria %}
+              <li style="margin-bottom:8px;font-size:0.9rem;">{{ kpi }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom:20px;">
+        <div class="admin-card__header"><h3>Soluciones Recomendadas</h3></div>
+        <div class="admin-card__body">
+          <div class="plan-grid" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr));">
+            {% for sol in pack.soluciones_prioritarias %}
+            <div class="plan-card" style="padding:16px;">
+              <h4 style="font-size:0.9rem;margin-bottom:4px;">{{ sol.modulo }}</h4>
+              <p style="font-size:0.85rem;color:#475569;">{{ sol.justificacion }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card__header"><h3>Consultorias con este Industry Pack</h3></div>
+        <div class="admin-card__body">
+          {% if consultorias %}
+          <table class="admin-table">
+            <thead><tr><th>Cliente</th><th>Estado</th><th>Fecha</th><th>Accion</th></tr></thead>
+            <tbody>
+              {% for c in consultorias %}
+              <tr>
+                <td><strong>{{ c.cliente.company_name }}</strong></td>
+                <td><span class="badge badge--{{ 'success' if c.estado == 'completada' else 'warning' }}">{{ c.estado }}</span></td>
+                <td>{{ c.created_at.strftime('%d/%m/%Y') if c.created_at else '' }}</td>
+                <td><a href="/studio/{{ c.id }}/gemelo-asis" class="btn btn--sm btn--outline">Abrir</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p style="color:var(--text-muted);text-align:center;padding:20px;">Aun no hay consultorias usando este pack.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

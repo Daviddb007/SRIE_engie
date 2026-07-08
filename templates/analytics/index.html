@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Analytics — Stonelytics{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'analytics' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Analytics</h1>
+      <span style="color:var(--text-muted);font-size:0.9rem;">Metricas consolidadas de SRIE Engine</span>
+    </header>
+    <div class="admin-content">
+
+      <div class="admin-stats" id="stats-cards">
+        <div class="admin-stat"><div class="admin-stat__icon" style="background:rgba(37,99,235,0.1);color:var(--accent-blue);"><i class="ti ti-folder"></i></div><div><span class="admin-stat__value" id="stat-total">—</span><span class="admin-stat__label">Consultorias</span></div></div>
+        <div class="admin-stat"><div class="admin-stat__icon" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ti ti-check"></i></div><div><span class="admin-stat__value" id="stat-completadas">—</span><span class="admin-stat__label">Completadas</span></div></div>
+        <div class="admin-stat"><div class="admin-stat__icon" style="background:rgba(217,119,6,0.1);color:var(--accent-amber);"><i class="ti ti-file-text"></i></div><div><span class="admin-stat__value" id="stat-cotizaciones">—</span><span class="admin-stat__label">Cotizaciones</span></div></div>
+        <div class="admin-stat"><div class="admin-stat__icon" style="background:rgba(99,102,241,0.1);color:var(--accent-indigo);"><i class="ti ti-trending-up"></i></div><div><span class="admin-stat__value" id="stat-conversion">—</span><span class="admin-stat__label">Conversion %</span></div></div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Madurez Promedio por Industria</h3></div>
+          <div class="admin-card__body" id="madurez-chart">
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">Cargando...</p>
+          </div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Consultorias por Industria</h3></div>
+          <div class="admin-card__body" id="industria-chart">
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">Cargando...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-grid" style="margin-top:20px;">
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Brechas por Capa</h3></div>
+          <div class="admin-card__body" id="brechas-chart">
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">Cargando...</p>
+          </div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header"><h3>Brechas por Impacto</h3></div>
+          <div class="admin-card__body" id="impacto-chart">
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">Cargando...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+async function cargarDatos() {
+    const resp = await fetch('/analytics/api/datos');
+    const d = await resp.json();
+    
+    document.getElementById('stat-total').textContent = d.total_consultorias;
+    document.getElementById('stat-completadas').textContent = d.por_estado?.completada || 0;
+    document.getElementById('stat-cotizaciones').textContent = d.cotizaciones?.total || 0;
+    document.getElementById('stat-conversion').textContent = (d.cotizaciones?.tasa_conversion || 0) + '%';
+
+    // Madurez por industria
+    const madurez = d.madurez_promedio || {};
+    const madurezHtml = Object.entries(madurez).length > 0
+        ? Object.entries(madurez).map(([k, v]) =>
+            '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">' +
+            '<span style="width:100px;font-size:0.85rem;">' + k.charAt(0).toUpperCase() + k.slice(1) + '</span>' +
+            '<div style="flex:1;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;">' +
+            '<div style="width:' + v + '%;height:100%;background:#0d9488;border-radius:6px;"></div></div>' +
+            '<span style="width:40px;font-size:0.85rem;font-weight:600;text-align:right;">' + v + '%</span></div>'
+        ).join('')
+        : '<p style="color:var(--text-muted);text-align:center;">Sin datos de madurez aun</p>';
+    document.getElementById('madurez-chart').innerHTML = madurezHtml;
+
+    // Industrias
+    const ind = d.por_industria || {};
+    const indHtml = Object.entries(ind).length > 0
+        ? Object.entries(ind).map(([k, v]) =>
+            '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">' +
+            '<span>' + k.charAt(0).toUpperCase() + k.slice(1) + '</span>' +
+            '<span class="badge badge--info">' + v + '</span></div>'
+        ).join('')
+        : '<p style="color:var(--text-muted);text-align:center;">Sin datos</p>';
+    document.getElementById('industria-chart').innerHTML = indHtml;
+
+    // Brechas por capa
+    const bc = d.brechas_por_capa || {};
+    const bcHtml = Object.entries(bc).length > 0
+        ? Object.entries(bc).sort((a, b) => b[1] - a[1]).map(([k, v]) =>
+            '<div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">' +
+            '<span style="width:90px;font-size:0.8rem;">' + k + '</span>' +
+            '<div style="flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;">' +
+            '<div style="width:' + Math.min(v * 10, 100) + '%;height:100%;background:#dc2626;border-radius:4px;"></div></div>' +
+            '<span style="font-size:0.8rem;font-weight:600;">' + v + '</span></div>'
+        ).join('')
+        : '<p style="color:var(--text-muted);text-align:center;">Sin brechas registradas</p>';
+    document.getElementById('brechas-chart').innerHTML = bcHtml;
+
+    // Brechas por impacto
+    const bi = d.brechas_por_impacto || {};
+    const biHtml = Object.entries(bi).length > 0
+        ? Object.entries(bi).map(([k, v]) =>
+            '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">' +
+            '<span class="impacto-' + k + '">' + k.toUpperCase() + '</span>' +
+            '<span class="badge badge--' + (k === 'alto' ? 'error' : k === 'medio' ? 'warning' : 'success') + '">' + v + '</span></div>'
+        ).join('')
+        : '<p style="color:var(--text-muted);text-align:center;">Sin datos</p>';
+    document.getElementById('impacto-chart').innerHTML = biHtml;
+}
+cargarDatos();
+</script>
+{% endblock %}

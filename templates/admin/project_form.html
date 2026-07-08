@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if project else 'Nuevo' }} Proyecto — Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'projects' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>{{ 'Editar' if project else 'Nuevo' }} Proyecto</h1>
+    </header>
+    <div class="admin-content">
+      <form class="admin-form" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+          <label for="client_id">Cliente *</label>
+          <select id="client_id" name="client_id" required>
+            <option value="">Seleccionar cliente...</option>
+            {% for c in clients %}
+            <option value="{{ c.id }}" {{ 'selected' if project and project.client_id == c.id }}>{{ c.company_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="name">Nombre del proyecto *</label>
+          <input type="text" id="name" name="name" required value="{{ project.name if project else '' }}">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label for="system_type">Tipo de sistema</label>
+            <select id="system_type" name="system_type">
+              <option value="start" {{ 'selected' if project and project.system_type == 'start' }}>Start</option>
+              <option value="growth" {{ 'selected' if project and project.system_type == 'growth' }}>Growth</option>
+              <option value="intelligence" {{ 'selected' if project and project.system_type == 'intelligence' }}>Intelligence</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="status">Estado</label>
+            <select id="status" name="status">
+              <option value="draft" {{ 'selected' if project and project.status == 'draft' }}>Borrador</option>
+              <option value="active" {{ 'selected' if project and project.status == 'active' }}>Activo</option>
+              <option value="paused" {{ 'selected' if project and project.status == 'paused' }}>Pausado</option>
+              <option value="completed" {{ 'selected' if project and project.status == 'completed' }}>Completado</option>
+              <option value="cancelled" {{ 'selected' if project and project.status == 'cancelled' }}>Cancelado</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" name="description" rows="3">{{ project.description if project else '' }}</textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label for="domain">Dominio</label>
+            <input type="text" id="domain" name="domain" value="{{ project.domain if project else '' }}" placeholder="ej: aurora.com">
+          </div>
+          <div class="form-group">
+            <label for="hosting_provider">Hosting</label>
+            <input type="text" id="hosting_provider" name="hosting_provider" value="{{ project.hosting_provider if project else '' }}" placeholder="ej: DigitalOcean">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="notes">Notas</label>
+          <textarea id="notes" name="notes" rows="3">{{ project.notes if project else '' }}</textarea>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button type="submit" class="btn btn--primary btn--lg">{{ 'Guardar cambios' if project else 'Crear proyecto' }}</button>
+          <a href="/admin/projects" class="btn btn--outline btn--lg" style="border-color:var(--border);color:var(--text-primary);">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %}

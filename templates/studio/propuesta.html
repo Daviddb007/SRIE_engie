@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Propuesta — {{ consultoria.cliente.company_name }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css"><link rel="stylesheet" href="/static/css/studio.css">{% endblock %}
+{% block body %}
+<div class="admin-layout">
+  {% set active_page = 'studio' %}
+  {% include "admin/_sidebar.html" %}
+  <main class="admin-main">
+    <header class="admin-header">
+      <h1>Propuesta Comercial — Blueprint Empresarial</h1>
+      <div style="display:flex;gap:8px;">
+        {% if quotation %}
+        <a href="/studio/{{ consultoria.id }}/pdf" class="btn btn--primary btn--sm"><i class="ti ti-download"></i> Descargar PDF</a>
+        {% endif %}
+      </div>
+    </header>
+    <div class="admin-content">
+      <div class="proposal">
+
+        <div class="proposal__section">
+          <h2>Resumen Ejecutivo</h2>
+          <p><strong>Cliente:</strong> {{ consultoria.cliente.company_name }}</p>
+          <p><strong>Contacto:</strong> {{ consultoria.cliente.contact_name }}</p>
+          <p><strong>Fecha:</strong> {{ consultoria.created_at.strftime('%d/%m/%Y') if consultoria.created_at else '—' }}</p>
+          <hr style="margin:16px 0;">
+          {% set madurez = twin_asis.capas.get('madurez', {}) if twin_asis and twin_asis.capas else {} %}
+          <div style="display:flex;gap:24px;margin-bottom:16px;">
+            <div><strong>Madurez Actual:</strong> <span style="font-size:1.3rem;font-weight:700;color:var(--accent-blue);">{{ madurez.get('general', 0) }}%</span></div>
+            <div><strong>Brechas Identificadas:</strong> <span style="font-size:1.3rem;font-weight:700;color:var(--red);">{{ brechas | length }}</span></div>
+            <div><strong>Modulos Recomendados:</strong> <span style="font-size:1.3rem;font-weight:700;color:var(--accent-green);">{{ plan.get('items', []) | length }}</span></div>
+          </div>
+          <p>Diagnostico empresarial completo generado por SRIE Engine. A continuacion se presentan el estado actual, las brechas identificadas, el estado deseado propuesto y el plan de implementacion recomendado.</p>
+        </div>
+
+        {% set resumen = madurez.get('resumen_ejecutivo', {}) %}
+        {% if resumen and resumen is mapping and resumen.get('perfil_empresa') %}
+        <div class="proposal__section">
+          <h2>Perfil de la Empresa</h2>
+          <p>{{ resumen.get('perfil_empresa', '') }}</p>
+          {% if resumen.get('hechos_confirmados') %}
+          <h4 style="margin-top:12px;color:var(--accent-green);">Hechos Confirmados</h4>
+          <ul>
+            {% for h in resumen.get('hechos_confirmados', []) %}
+            <li style="margin-bottom:4px;">{{ h }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% if resumen.get('oportunidades_detectadas') %}
+          <h4 style="margin-top:12px;color:var(--accent-amber);">Oportunidades Detectadas</h4>
+          <ul>
+            {% for o in resumen.get('oportunidades_detectadas', []) %}
+            <li style="margin-bottom:4px;">{{ o }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if madurez %}
+        <div class="proposal__section">
+          <h2>Madurez por Dimension</h2>
+          <table class="admin-table">
+            <thead><tr><th>Dimension</th><th>Madurez</th><th>Nivel</th></tr></thead>
+            <tbody>
+              {% set capas_label = {'proposito':'Proposito','clientes':'Clientes','servicios':'Servicios','procesos':'Procesos','personas':'Personas','informacion':'Informacion','tecnologia':'Tecnologia','inteligencia':'Inteligencia','gobierno':'Gobierno','evolucion':'Evolucion'} %}
+              {% for capa_id, label in capas_label.items() %}
+              {% set score = madurez.get('por_capa', {}).get(capa_id, 0) %}
+              <tr>
+                <td><strong>{{ label }}</strong></td>
+                <td>
+                  <div style="width:200px;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden;">
+                    <div style="width:{{ score }}%;height:100%;background:{% if score < 30 %}#dc2626{% elif score < 60 %}#d97706{% else %}#16a34a{% endif %};border-radius:5px;"></div>
+                  </div>
+                </td>
+                <td><span class="impacto-{{ 'alto' if score < 30 else 'medio' if score < 60 else 'bajo' }}">{{ score }}%</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        {% if brechas %}
+        <div class="proposal__section">
+          <h2>Brechas Prioritarias</h2>
+          <table class="admin-table">
+            <thead><tr><th>Capa</th><th>Brecha</th><th>Impacto</th><th>Solucion</th></tr></thead>
+            <tbody>
+              {% for b in brechas %}
+              <tr>
+                <td><strong>{{ b.capa }}</strong></td>
+                <td>{{ b.problema_actual[:100] }}</td>
+                <td><span class="impacto-{{ b.impacto }}">{{ b.impacto | upper }}</span></td>
+                <td>{{ b.solucion[:80] if b.solucion else '—' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        {% if plan and plan.items %}
+        <div class="proposal__section">
+          <h2>Plan Recomendado</h2>
+          <table class="admin-table">
+            <thead><tr><th>Modulo</th><th>Descripcion</th><th>Inversion</th></tr></thead>
+            <tbody>
+              {% for item in plan.items %}
+              <tr>
+                <td><strong>{{ item.get('modulo', item.get('description', 'Modulo')) }}</strong></td>
+                <td>{{ item.get('descripcion', item.get('justificacion', '')) }}</td>
+                <td style="text-align:right;">${{ '{:,.2f}'.format(item.get('precio', item.get('valor_estimado', 0))) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:2px solid var(--border);">
+            <div>
+              <span style="color:var(--text-muted);font-size:0.9rem;">Tiempo Estimado</span>
+              <div style="font-size:1.2rem;font-weight:700;">{{ plan.duracion_estimada if not plan is mapping else plan.get('duracion_estimada', 'Por definir') }}</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="color:var(--text-muted);font-size:0.9rem;">Inversion Total</span>
+              <div style="font-size:1.5rem;font-weight:700;color:var(--accent-blue);">${{ '{:,.2f}'.format(plan.total_estimado if not plan is mapping else plan.get('total_estimado', 0)) }}</div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if quotation %}
+        <div class="proposal__section">
+          <h2>Cotizacion</h2>
+          <p><strong>Numero:</strong> {{ quotation.quotation_number }}</p>
+          <p><strong>Valor Final:</strong> <span style="font-size:1.3rem;font-weight:700;color:var(--accent-blue);">${{ '{:,.2f}'.format(quotation.final_price) }}</span></p>
+          {% if quotation.valid_until %}
+          <p><strong>Vigencia:</strong> {{ quotation.valid_until.strftime('%d/%m/%Y') }}</p>
+          {% endif %}
+          <div style="margin-top:16px;">
+            <a href="/studio/{{ consultoria.id }}/pdf" class="btn btn--primary">Descargar PDF Completo</a>
+          </div>
+        </div>
+        {% else %}
+        <div class="proposal__section" style="text-align:center;">
+          <p style="color:var(--text-muted);margin-bottom:16px;">No se ha generado cotizacion aun. Genera una desde el plan recomendado.</p>
+          <a href="/studio/{{ consultoria.id }}/cotizacion" class="btn btn--primary">Generar Cotizacion</a>
+          <a href="/studio/{{ consultoria.id }}/plan" class="btn btn--outline" style="margin-left:8px;">Ver Plan</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
