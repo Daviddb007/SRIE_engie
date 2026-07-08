@@ -12,4 +12,10 @@ class BaseModel(db.Model):
                            onupdate=lambda: datetime.now(timezone.utc))
 
     def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        result = {}
+        for c in self.__table__.columns:
+            val = getattr(self, c.name)
+            if isinstance(val, uuid.UUID):
+                val = str(val)
+            result[c.name] = val
+        return result
