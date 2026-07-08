@@ -29,7 +29,9 @@ class AdminAuthService:
             return redirect(url_for('admin_dashboard.dashboard'))
 
         if request.method == 'POST':
-            return AdminAuthService._process_login()
+            result = AdminAuthService._process_login()
+            if result is not None:
+                return result
 
         return render_template('admin/login.html')
 
